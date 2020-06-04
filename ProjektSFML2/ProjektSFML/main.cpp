@@ -13,7 +13,8 @@
 
 
 int main()
-{
+{ 
+	
 	sf::RenderWindow window(sf::VideoMode(1024, 640), "POLIBUDA", sf::Style::Close | sf::Style::Resize);
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
 
@@ -27,7 +28,6 @@ int main()
 	Player player(&playerTexture, sf::Vector2u(3, 8), 0.1f, 200.0f, 320.0f);
 
 	std::map<char, sf::Texture*> GroundTextures;
-
 	sf::Texture* one = new sf::Texture;
 	one->loadFromFile("1.png");
 	GroundTextures['G'] = one;
@@ -67,32 +67,23 @@ int main()
 
 	float deltaTime = 0.0f;
 	sf::Clock clock;
+	sf::Clock clock2;
+	clock2.restart();
 
-	
-
-
-	
-	
-	/*std::vector<Platform> platforms;
-	platforms.push_back(Platform(nullptr, sf::Vector2f(1000000.0f, 64.0f), sf::Vector2f(500.0f, 470.0f)));
-	platforms.push_back(Platform(nullptr, sf::Vector2f(900.0f, 64.0f), sf::Vector2f(800.0f, 300.0f)));
-	platforms.push_back(Platform(nullptr, sf::Vector2f(500.0f, 64.0f), sf::Vector2f(400.0f, 130.0f)));
-	platforms.push_back(Platform(nullptr, sf::Vector2f(500.0f, 64.0f), sf::Vector2f(1100.0f, 130.0f)));
-	platforms.push_back(Platform(nullptr, sf::Vector2f(800.0f, 64.0f), sf::Vector2f(1900.0f, 300.0f)));*/
-	
+	sf::Time elapsed1 = clock2.getElapsedTime();
+	sf::Text licznik;
+	std::ostringstream Zegar;
+	Zegar << "Czas  " << elapsed1.asSeconds();
+	licznik.setCharacterSize(45);
+	licznik.setFillColor(sf::Color::Red);
+	licznik.setFont(font);
+	licznik.setString(Zegar.str());
 	
 	
 
 	while (window.isOpen()) {
 
-		sf::Time elapsed1 = clock.getElapsedTime();
-		sf::Text licznik;
-		std::ostringstream Zegar;
-		Zegar << "Czas  " << elapsed1.asSeconds();
-		licznik.setCharacterSize(45);
-		licznik.setFillColor(sf::Color::Red);
-		licznik.setFont(font);
-		licznik.setString(Zegar.str());
+		
 
 		deltaTime = clock.restart().asSeconds();
 		if (deltaTime > 1.0f / 20.0f)
@@ -116,9 +107,7 @@ int main()
 		Collider col = player.GetCollider();
 		sf::Vector2f direction;
 		sf::Vector2f direction2;
-		/*for(Platform& platform : platforms)
-			if(platform.GetCollider().CheckCollision(col, direction, 1.0f))
-				player.OnCollision(direction);*/
+		
 		for (int i = 0; i < coinVec.size(); i++) {
 			if (player.isCollidingWithCoin(coinVec[i])) {
 				coinVec[i]->setPos({ 422234, 423432 });
@@ -133,8 +122,7 @@ int main()
 		window.draw(Tlo);
 		window.setView(view);
 		player.Draw(window);
-		/*for (Platform& platform : platforms)
-			platform.Draw(window);*/
+		
 		for (int i = 0; i < level.Matrix.size(); i++)
 		{
 			for (int j = 0; j < level.Matrix[i].size(); j++)
