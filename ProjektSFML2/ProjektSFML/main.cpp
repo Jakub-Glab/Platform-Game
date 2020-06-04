@@ -19,10 +19,11 @@ int main()
 	sf::Time elapsed1 = clock2.getElapsedTime();
 	sf::Text licznik;
 	std::ostringstream Zegar;
-	Zegar << "Czas  " << elapsed1.asSeconds();
 	licznik.setCharacterSize(45);
 	licznik.setFillColor(sf::Color::Red);
 	licznik.setFont(font);
+	
+	Zegar << "Czas: " << elapsed1.asSeconds();
 	licznik.setString(Zegar.str());
 	
 	sf::RenderWindow window(sf::VideoMode(1024, 640), "POLIBUDA", sf::Style::Close | sf::Style::Resize);
@@ -68,7 +69,7 @@ int main()
 	int score = 0;
 	font.loadFromFile("font.ttf");
 	std::ostringstream ssScore;
-	ssScore << "Punkty   ECTS   " << "["<<score<<"]";
+	ssScore << "Punkty ECTS: " << "["<<score<<"]";
 	sf::Text lblScore;
 	lblScore.setCharacterSize(45);
 	lblScore.setFillColor(sf::Color::Red);
@@ -114,7 +115,7 @@ int main()
 				coinVec[i]->setPos({ 422234, 423432 });
 				score++;
 				ssScore.str("");
-				ssScore << "Punkty   ECTS   " << score;
+				ssScore << "Punkty ECTS: " << "[" << score << "]";
 				lblScore.setString(ssScore.str());
 			}
 		}
