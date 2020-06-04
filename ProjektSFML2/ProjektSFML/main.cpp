@@ -14,6 +14,17 @@
 
 int main()
 { 
+	sf::Clock clock2;
+	clock2.restart();
+	sf::Font font;
+	sf::Time elapsed1 = clock2.getElapsedTime();
+	sf::Text licznik;
+	std::ostringstream Zegar;
+	Zegar << "Czas  " << elapsed1.asSeconds();
+	licznik.setCharacterSize(45);
+	licznik.setFillColor(sf::Color::Red);
+	licznik.setFont(font);
+	licznik.setString(Zegar.str());
 	
 	sf::RenderWindow window(sf::VideoMode(1024, 640), "POLIBUDA", sf::Style::Close | sf::Style::Resize);
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
@@ -37,7 +48,6 @@ int main()
 	
 	Level level(GroundTextures);
 	
-
 	std::vector<Coin*> coinVec;
 	Coin coin1({ 20, 20 });
 	Coin coin2({ 20, 20 });
@@ -53,9 +63,7 @@ int main()
 	coin3.setPos({ 360, 420 });
 	coin4.setPos({ 220, 70 });
 
-
 	int score = 0;
-	sf::Font font;
 	font.loadFromFile("font.ttf");
 	std::ostringstream ssScore;
 	ssScore << "Punkty   ECTS   " << score;
@@ -67,17 +75,8 @@ int main()
 
 	float deltaTime = 0.0f;
 	sf::Clock clock;
-	sf::Clock clock2;
-
-	clock2.restart();
-	sf::Time elapsed1 = clock2.getElapsedTime();
-	sf::Text licznik;
-	std::ostringstream Zegar;
-	Zegar << "Czas  " << elapsed1.asSeconds();
-	licznik.setCharacterSize(45);
-	licznik.setFillColor(sf::Color::Red);
-	licznik.setFont(font);
-	licznik.setString(Zegar.str());
+	
+	
 	
 	
 
