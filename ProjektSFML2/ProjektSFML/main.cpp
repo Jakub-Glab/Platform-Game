@@ -45,6 +45,9 @@ int main()
 	one = new sf::Texture;
 	one->loadFromFile("2.png");
 	GroundTextures['D'] = one;
+	one = new sf::Texture;
+	one->loadFromFile("3.png");
+	GroundTextures['X'] = one;
 	
 	Level level(GroundTextures);
 	
@@ -66,7 +69,7 @@ int main()
 	int score = 0;
 	font.loadFromFile("font.ttf");
 	std::ostringstream ssScore;
-	ssScore << "Punkty   ECTS   " << score;
+	ssScore << "Punkty   ECTS   " << "["<<score<<"]";
 	sf::Text lblScore;
 	lblScore.setCharacterSize(45);
 	lblScore.setFillColor(sf::Color::Red);
