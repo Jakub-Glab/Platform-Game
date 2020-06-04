@@ -4,7 +4,6 @@
 #include <map>
 #include <sstream>
 #include "Player.h"
-#include "Map.h"
 #include "Kolizje.h"
 #include "ECTS.h"
 #include "Level.h"
