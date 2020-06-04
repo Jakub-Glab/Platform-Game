@@ -68,8 +68,8 @@ int main()
 	float deltaTime = 0.0f;
 	sf::Clock clock;
 	sf::Clock clock2;
-	clock2.restart();
 
+	clock2.restart();
 	sf::Time elapsed1 = clock2.getElapsedTime();
 	sf::Text licznik;
 	std::ostringstream Zegar;
