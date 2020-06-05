@@ -15,13 +15,7 @@ int main()
 { 
 	sf::Clock clock2;
 	clock2.restart();
-	sf::Font font;
-	sf::Time elapsed1 = clock2.getElapsedTime();
-	sf::Text licznik;
-	std::ostringstream Zegar;
-	licznik.setCharacterSize(45);
-	licznik.setFillColor(sf::Color::Red);
-	licznik.setFont(font);
+	
 	
 	Zegar << "Czas: " << elapsed1.asSeconds();
 	licznik.setString(Zegar.str());
@@ -50,6 +44,14 @@ int main()
 	GroundTextures['X'] = one;
 	
 	Level level(GroundTextures);
+
+	sf::Font font;
+	sf::Time elapsed1 = clock2.getElapsedTime();
+	sf::Text licznik;
+	std::ostringstream Zegar;
+	licznik.setCharacterSize(45);
+	licznik.setFillColor(sf::Color::Red);
+	licznik.setFont(font);
 	
 	std::vector<Coin*> coinVec;
 	Coin coin1({ 20, 20 });
