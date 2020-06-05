@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "Kolizje.h"
 #include "ECTS.h"
-#include "Level.h"
+#include "Mapa.h"
 
 
 

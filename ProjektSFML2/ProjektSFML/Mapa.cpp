@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "Level.h"
+#include "Mapa.h"
 
 Level::Level(std::map<char, sf::Texture*> groundTextures)
 {
