@@ -1,5 +1,6 @@
 #include "Player.h"
 
+
 Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight) : 
 	animation(texture, imageCount, switchTime)
 {
@@ -19,7 +20,7 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
-
+	sf::Event event;
 	velocity.x = 0.0f;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -28,7 +29,8 @@ void Player::Update(float deltaTime)
 		velocity.x += speed;
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && canJump)
-	{
+	{ 
+		
 		canJump = false;
 		velocity.y = -sqrtf(1.3f * 981.0f * jumpHeight);
 	}
@@ -39,7 +41,6 @@ void Player::Update(float deltaTime)
 		velocity.y = -sqrtf(1.3f * 981.0f * jumpHeight);
 	}
 	
-
 	velocity.y += 981.0f * deltaTime; 
 
 	if (velocity.x == 0.0f)

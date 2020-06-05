@@ -15,7 +15,7 @@ Level::~Level()
 
 void Level::loadMap()
 {
-	std::ifstream file("location.txt");
+	std::ifstream file("mapa.txt");
 	std::string charLine;
 	std::vector<char> mapLine;
 	if (file.is_open())

@@ -48,7 +48,7 @@ int main()
 	sf::Time elapsed1 = clock2.getElapsedTime();
 	sf::Text licznik;
 	std::ostringstream Zegar;
-	licznik.setCharacterSize(45);
+	licznik.setCharacterSize(35);
 	licznik.setFillColor(sf::Color::Red);
 	licznik.setFont(font);
 	Zegar << "Czas: " << elapsed1.asSeconds();

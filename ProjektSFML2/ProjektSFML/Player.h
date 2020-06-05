@@ -4,6 +4,7 @@
 #include "Kolizje.h"
 #include "ECTS.h"
 
+
 class Player
 {
 public:
