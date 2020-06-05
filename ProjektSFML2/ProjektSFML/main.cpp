@@ -17,8 +17,7 @@ int main()
 	clock2.restart();
 	
 	
-	Zegar << "Czas: " << elapsed1.asSeconds();
-	licznik.setString(Zegar.str());
+	
 	
 	sf::RenderWindow window(sf::VideoMode(1024, 640), "POLIBUDA", sf::Style::Close | sf::Style::Resize);
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
@@ -52,6 +51,8 @@ int main()
 	licznik.setCharacterSize(45);
 	licznik.setFillColor(sf::Color::Red);
 	licznik.setFont(font);
+	Zegar << "Czas: " << elapsed1.asSeconds();
+	licznik.setString(Zegar.str());
 	
 	std::vector<Coin*> coinVec;
 	Coin coin1({ 20, 20 });
