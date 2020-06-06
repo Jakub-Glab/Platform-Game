@@ -17,8 +17,6 @@ int main()
 	clock2.restart();
 	
 	
-	
-	
 	sf::RenderWindow window(sf::VideoMode(1024, 640), "POLIBUDA", sf::Style::Close | sf::Style::Resize);
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
 
@@ -68,6 +66,7 @@ int main()
 	coin2.setPos({ 580, 230 });
 	coin3.setPos({ 360, 420 });
 	coin4.setPos({ 220, 70 });
+	
 
 	int score = 0;
 	font.loadFromFile("font.ttf");

@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <SFML\Graphics.hpp>
-
 class Coin {
 public:
     Coin(sf::Vector2f size) {
@@ -21,6 +20,9 @@ public:
     void setPos(sf::Vector2f newPos) {
         coin.setPosition(newPos);
     }
+    
 private:
     sf::RectangleShape coin;
 };
+
+

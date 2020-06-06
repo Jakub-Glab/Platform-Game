@@ -44,12 +44,14 @@ void Level::createMap(std::map<char, sf::Texture*> groundTextures)
 	{
 		for (int j = 0; j < Arrangement[i].size(); j++)
 		{
-			if (Arrangement[i][j] != 'O')
-			{
-				chunk.setTexture(*groundTextures[Arrangement[i][j]]);
-				chunk.setScale(1.0f, 1.0f);
-				chunk.setPosition(float(j * 64), float(i * 64));
-				spritesLine.push_back(chunk);
+			if (Arrangement[i][j] != 'C') {
+				if (Arrangement[i][j] != 'O')
+				{
+					chunk.setTexture(*groundTextures[Arrangement[i][j]]);
+					chunk.setScale(1.0f, 1.0f);
+					chunk.setPosition(float(j * 64), float(i * 64));
+					spritesLine.push_back(chunk);
+				}
 			}
 		}
 		Matrix.push_back(spritesLine);
