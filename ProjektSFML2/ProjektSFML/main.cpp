@@ -39,6 +39,9 @@ int main()
 	one = new sf::Texture;
 	one->loadFromFile("3.png");
 	GroundTextures['X'] = one;
+	one = new sf::Texture;
+	one->loadFromFile("4.png");
+	GroundTextures['B'] = one;
 	
 	Level level(GroundTextures);
 
