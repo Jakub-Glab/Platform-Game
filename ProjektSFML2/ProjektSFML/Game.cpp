@@ -1,13 +1,14 @@
 #include "Game.h"
+#include "Coin.h"
 
 Game::Game()
 {
-	
 	window = new sf::RenderWindow(sf::VideoMode(1024, 640), "POLIBUDA", sf::Style::Close | sf::Style::Resize);
 	loadData();
 	view = new sf::View(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
 	level = new Level(GroundTextures);
 	player = new Player(&playerTexture, sf::Vector2u(3, 8), 0.1f, 200.0f, 320.0f);
+	
 }
 Game::~Game()
 {
@@ -16,6 +17,8 @@ Game::~Game()
 void Game::loadTextures()
 {
 	playerTexture.loadFromFile("spritesheet3.png");
+
+	coinTexture.loadFromFile("CoinSheet.png");
 
 	tlo.loadFromFile("tlo3.jpg");
 
@@ -39,12 +42,24 @@ void Game::loadData()
 {
 	loadTextures();
 	TworzCoin();
+	Czas();
+	wysPunkty();
+}
+void Game::Czas()
+{
+	Zegar.clear();
+	clock2.restart();
+	c += elapsed1.asSeconds();
+	Zegar << "Czas: " << c;
 }
 bool Game::Run()
 {
 	return window->isOpen();
 }
-
+void Game::wysPunkty()
+{
+	if (score == 0) ssScore << "Punkty ECTS: " << "[" << score << "]";
+}
 void Game::Update()
 {
 	window->setFramerateLimit(30);
@@ -67,25 +82,32 @@ void Game::Update()
 }
 void Game::TworzCoin()
 {
-	coinVec.push_back(&coin1);
-	coinVec.push_back(&coin2);
-	coinVec.push_back(&coin3);
-	coinVec.push_back(&coin4);
+	coinVec.push_back(coin1);
+	coinVec.push_back(coin2);
+	coinVec.push_back(coin3);
+	coinVec.push_back(coin4);
 
 	coin1.setPos({ 420, 230 });
 	coin2.setPos({ 580, 230 });
 	coin3.setPos({ 360, 420 });
 	coin4.setPos({ 220, 70 });
+
+	coin1.Draw(*window);
+	coin2.Draw(*window);
+	coin3.Draw(*window);
+	coin4.Draw(*window);
 }
 void Game::Render()
 {
-	clock2.restart();
+	
+
 	Tlo.setTexture(tlo);
 	view->setCenter(player->GetPosition());
 	window->clear();
 	window->draw(Tlo);
 	window->setView(*view);
 	Tlo.setPosition(view->getCenter().x - 512, view->getCenter().y - 320);
+	
 	
 	for (int i = 0; i < level->Matrix.size(); i++)
 	{
@@ -94,15 +116,9 @@ void Game::Render()
 			window->draw(level->Matrix[i][j]);
 		}
 	}
-	if (score == 0) 
-	{
-		ssScore << "Punkty ECTS: " << "[" << score << "]";
-	}
 	Licznik();
-	coin1.drawTo(*window);
-	coin2.drawTo(*window);
-	coin3.drawTo(*window);
-	coin4.drawTo(*window);
+	
+
 	player->Draw(*window);
 	window->display();
 }
@@ -112,23 +128,19 @@ void Game::Usun(int&i)
 }
 void Game::Licznik()
 {
-	
 	font.loadFromFile("font.ttf");
 
 	licznik.setCharacterSize(35);
 	licznik.setFillColor(sf::Color::Red);
 	licznik.setFont(font);
-	Zegar << "Czas: " << elapsed1.asSeconds();
 	licznik.setString(Zegar.str());
 	licznik.setPosition(view->getCenter().x - 512, view->getCenter().y - 180);
 	
-	lblScore.setCharacterSize(45);
-	lblScore.setFillColor(sf::Color::Red);
-	lblScore.setFont(font);
-	lblScore.setString(ssScore.str());
-	lblScore.setPosition(view->getCenter().x - 512, view->getCenter().y - 280);
-
-	
+	Score.setCharacterSize(45);
+	Score.setFillColor(sf::Color::Red);
+	Score.setFont(font);
+	Score.setString(ssScore.str());
+	Score.setPosition(view->getCenter().x - 512, view->getCenter().y - 280);
 
 	for (int i = 0; i < coinVec.size(); i++) {
 		if (player->isCollidingWithCoin(coinVec[i])) {
@@ -136,12 +148,12 @@ void Game::Licznik()
 			score++;
 			ssScore.str("");
 			ssScore << "Punkty ECTS: " << "[" << score << "]";
-			lblScore.setString(ssScore.str());
+			Score.setString(ssScore.str());
 		}
 	}
 
-	window->draw(lblScore);
-	//window->draw(licznik);
+	window->draw(Score);
+	window->draw(licznik);
 	
 }
 void Game::CheckCollision(sf::Vector2f& direction, float p)
