@@ -12,7 +12,7 @@ Zmiany względem tego co było widoczne na filmie wysłanym 04.06.2020:
 - usprawniono animacje.
 
 =======================| TO DO w najbliższym czasie |=======================
-- uporządkować main.cpp
+- uporządkować main.cpp | zrobiono
 - dodanie NPC
 - System żyć
 - naprawa licznika czasu
