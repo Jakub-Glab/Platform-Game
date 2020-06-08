@@ -4,8 +4,8 @@
 #include <SFML\Graphics.hpp>
 class Coin {
 public:
-    Coin(sf::Vector2f size) {
-        coin.setSize(size);
+    Coin() {
+        coin.setSize({ 20,20 });
         coin.setFillColor(sf::Color::Yellow);
     }
 

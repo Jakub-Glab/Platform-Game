@@ -4,9 +4,10 @@ Game::Game()
 {
 	
 	window = new sf::RenderWindow(sf::VideoMode(1024, 640), "POLIBUDA", sf::Style::Close | sf::Style::Resize);
+	loadData();
 	view = new sf::View(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
 	level = new Level(GroundTextures);
-	
+	player = new Player(&playerTexture, sf::Vector2u(3, 8), 0.1f, 200.0f, 320.0f);
 }
 Game::~Game()
 {
@@ -17,8 +18,8 @@ void Game::loadTextures()
 	playerTexture.loadFromFile("spritesheet3.png");
 
 	tlo.loadFromFile("tlo3.jpg");
-	one = new sf::Texture;
 
+	one = new sf::Texture;
 	one->loadFromFile("1.png");
 	GroundTextures['G'] = one;
 
@@ -37,6 +38,7 @@ void Game::loadTextures()
 void Game::loadData()
 {
 	loadTextures();
+	TworzCoin();
 }
 bool Game::Run()
 {
@@ -58,59 +60,13 @@ void Game::Update()
 			break;
 		}
 	}
-
+	
 	player->Update(deltaTime);
 	CheckCollision(direction, 1.0f);
 	
 }
-void Game::Render()
+void Game::TworzCoin()
 {
-	clock2.restart();
-	Tlo.setTexture(tlo);
-	view->setCenter(player->GetPosition());
-	window->clear();
-	window->draw(Tlo);
-	window->setView(*view);
-
-	Tlo.setPosition(view->getCenter().x - 512, view->getCenter().y - 320);
-	
-
-	sf::Font font;
-	sf::Time elapsed1 = clock2.getElapsedTime();
-	sf::Text licznik;
-	std::ostringstream Zegar;
-	licznik.setCharacterSize(35);
-	licznik.setFillColor(sf::Color::Red);
-	licznik.setFont(font);
-	Zegar << "Czas: " << elapsed1.asSeconds();
-	licznik.setString(Zegar.str());
-
-	int score = 0;
-	font.loadFromFile("font.ttf");
-	std::ostringstream ssScore;
-	ssScore << "Punkty ECTS: " << "[" << score << "]";
-	sf::Text lblScore;
-	lblScore.setCharacterSize(45);
-	lblScore.setFillColor(sf::Color::Red);
-	lblScore.setFont(font);
-	lblScore.setString(ssScore.str());
-
-	lblScore.setPosition(view->getCenter().x - 512, view->getCenter().y - 280);
-	licznik.setPosition(view->getCenter().x - 512, view->getCenter().y - 180);
-
-	for (int i = 0; i < level->Matrix.size(); i++)
-	{
-		for (int j = 0; j < level->Matrix[i].size(); j++)
-		{
-			window->draw(level->Matrix[i][j]);
-		}
-	}
-
-	std::vector<Coin*> coinVec;
-	Coin coin1({ 20, 20 });
-	Coin coin2({ 20, 20 });
-	Coin coin3({ 20, 20 });
-	Coin coin4({ 20, 20 });
 	coinVec.push_back(&coin1);
 	coinVec.push_back(&coin2);
 	coinVec.push_back(&coin3);
@@ -120,14 +76,73 @@ void Game::Render()
 	coin2.setPos({ 580, 230 });
 	coin3.setPos({ 360, 420 });
 	coin4.setPos({ 220, 70 });
-
+}
+void Game::Render()
+{
+	clock2.restart();
+	Tlo.setTexture(tlo);
+	view->setCenter(player->GetPosition());
+	window->clear();
+	window->draw(Tlo);
+	window->setView(*view);
+	Tlo.setPosition(view->getCenter().x - 512, view->getCenter().y - 320);
+	
+	for (int i = 0; i < level->Matrix.size(); i++)
+	{
+		for (int j = 0; j < level->Matrix[i].size(); j++)
+		{
+			window->draw(level->Matrix[i][j]);
+		}
+	}
+	if (score == 0) 
+	{
+		ssScore << "Punkty ECTS: " << "[" << score << "]";
+	}
+	Licznik();
 	coin1.drawTo(*window);
 	coin2.drawTo(*window);
 	coin3.drawTo(*window);
 	coin4.drawTo(*window);
-
 	player->Draw(*window);
 	window->display();
+}
+void Game::Usun(int&i)
+{
+	coinVec[i]->setPos({ 422234, 423432 });
+}
+void Game::Licznik()
+{
+	
+	font.loadFromFile("font.ttf");
+
+	licznik.setCharacterSize(35);
+	licznik.setFillColor(sf::Color::Red);
+	licznik.setFont(font);
+	Zegar << "Czas: " << elapsed1.asSeconds();
+	licznik.setString(Zegar.str());
+	licznik.setPosition(view->getCenter().x - 512, view->getCenter().y - 180);
+	
+	lblScore.setCharacterSize(45);
+	lblScore.setFillColor(sf::Color::Red);
+	lblScore.setFont(font);
+	lblScore.setString(ssScore.str());
+	lblScore.setPosition(view->getCenter().x - 512, view->getCenter().y - 280);
+
+	
+
+	for (int i = 0; i < coinVec.size(); i++) {
+		if (player->isCollidingWithCoin(coinVec[i])) {
+			Usun(i);
+			score++;
+			ssScore.str("");
+			ssScore << "Punkty ECTS: " << "[" << score << "]";
+			lblScore.setString(ssScore.str());
+		}
+	}
+
+	window->draw(lblScore);
+	//window->draw(licznik);
+	
 }
 void Game::CheckCollision(sf::Vector2f& direction, float p)
 {
@@ -136,17 +151,15 @@ void Game::CheckCollision(sf::Vector2f& direction, float p)
 	float intersectX;
 	float intersectY;
 
-
 	for (size_t i = 0; i < this->level->Matrix.size(); i++)
 	{
 		for (size_t j = 0; j < this->level->Matrix[i].size(); j++)
 		{
-
-
 			sf::Vector2f thisposition = this->level->Matrix[i][j].getPosition();
 			sf::Vector2f otherposition = this->player->GetPosition();
 			sf::Vector2f thishalfsize(this->level->Matrix[i][j].getGlobalBounds().width / 2.0f, level->Matrix[i][j].getGlobalBounds().height / 2.0f);
 			sf::Vector2f otherhalfsize = this->player->body.getSize() / 2.0f;
+
 			bool t;
 
 			deltax = otherposition.x - thisposition.x;
@@ -211,4 +224,5 @@ void Game::CheckCollision(sf::Vector2f& direction, float p)
 		}
 
 	}
+	
 }

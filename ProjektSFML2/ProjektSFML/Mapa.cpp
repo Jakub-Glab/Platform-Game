@@ -39,12 +39,11 @@ void Level::createMap(std::map<char, sf::Texture*> groundTextures)
 	std::vector<sf::Sprite> spritesLine;
 	sf::Sprite chunk;
 
-
 	for (int i = 0; i < Arrangement.size(); i++)
 	{
 		for (int j = 0; j < Arrangement[i].size(); j++)
 		{
-			if (Arrangement[i][j] != 'C') {
+			
 				if (Arrangement[i][j] != 'O')
 				{
 					chunk.setTexture(*groundTextures[Arrangement[i][j]]);
@@ -52,7 +51,7 @@ void Level::createMap(std::map<char, sf::Texture*> groundTextures)
 					chunk.setPosition(float(j * 64), float(i * 64));
 					spritesLine.push_back(chunk);
 				}
-			}
+			
 		}
 		Matrix.push_back(spritesLine);
 		spritesLine.clear();

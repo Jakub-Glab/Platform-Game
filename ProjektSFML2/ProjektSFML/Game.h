@@ -29,14 +29,32 @@ public:
 	sf::Texture tlo;
 	sf::Sprite Tlo;
 	sf::Texture* one = new sf::Texture;
+	std::vector<Coin*> coinVec;
+	std::ostringstream ssScore;
+	sf::Text lblScore;
+	sf::Font font;
+	sf::Time elapsed1 = clock2.getElapsedTime();
+	sf::Text licznik;
+	std::ostringstream Zegar;
+	int score = 0;
+
+	Coin coin1;
+	Coin coin2;
+	Coin coin3;
+	Coin coin4;
+
+	
 
 	Game();
 	~Game();
 	void loadTextures();
 	void loadData();
+	void TworzCoin();
+	void Usun(int &i);
 	bool Run();
 	void Update();
 	void Render();
+	void Licznik();
 	void CheckCollision(sf::Vector2f& direction, float p);
 
 };
