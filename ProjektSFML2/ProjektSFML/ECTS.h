@@ -4,20 +4,19 @@
 #include <SFML\Graphics.hpp>
 class Coin {
 public:
-    Coin(sf::Texture* texture, sf::Vector2u imageCount, float switchTime);
+    Coin(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f newPos);
     ~Coin();
     void Draw(sf::RenderWindow& window);
 
     sf::FloatRect getGlobalBounds() {
-        return coin.getGlobalBounds();
+        return ects.getGlobalBounds();
     }
 
-    void setPos(sf::Vector2f newPos) {
-        coin.setPosition(newPos);
-    }
+    
     void Update(float deltaTime);
+    sf::RectangleShape ects;
 private:
-    sf::RectangleShape coin;
+    
     Animation animation;
     bool faceRight;
     unsigned int row;

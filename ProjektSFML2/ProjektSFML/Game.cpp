@@ -8,6 +8,8 @@ Game::Game()
 	view = new sf::View(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
 	level = new Level(GroundTextures);
 	player = new Player(&playerTexture, sf::Vector2u(3, 8), 0.1f, 200.0f, 320.0f);
+	//coin1 = new Coin(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(420,230));
+	
 	
 }
 Game::~Game()
@@ -82,20 +84,12 @@ void Game::Update()
 }
 void Game::TworzCoin()
 {
+	Coin coin1(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(420, 230));
 	coinVec.push_back(coin1);
-	coinVec.push_back(coin2);
-	coinVec.push_back(coin3);
-	coinVec.push_back(coin4);
-
-	coin1.setPos({ 420, 230 });
-	coin2.setPos({ 580, 230 });
-	coin3.setPos({ 360, 420 });
-	coin4.setPos({ 220, 70 });
-
 	coin1.Draw(*window);
-	coin2.Draw(*window);
-	coin3.Draw(*window);
-	coin4.Draw(*window);
+	//coin2.Draw(*window);
+	//coin3.Draw(*window);
+	//coin4.Draw(*window);
 }
 void Game::Render()
 {
@@ -117,14 +111,9 @@ void Game::Render()
 		}
 	}
 	Licznik();
-	
 
 	player->Draw(*window);
 	window->display();
-}
-void Game::Usun(int&i)
-{
-	coinVec[i]->setPos({ 422234, 423432 });
 }
 void Game::Licznik()
 {
@@ -144,7 +133,7 @@ void Game::Licznik()
 
 	for (int i = 0; i < coinVec.size(); i++) {
 		if (player->isCollidingWithCoin(coinVec[i])) {
-			Usun(i);
+			coinVec.erase(coinVec.begin() + i);
 			score++;
 			ssScore.str("");
 			ssScore << "Punkty ECTS: " << "[" << score << "]";

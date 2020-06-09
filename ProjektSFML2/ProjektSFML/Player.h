@@ -18,8 +18,8 @@ public:
 
 	sf::Vector2f GetPosition() { return body.getPosition(); }
 	Collider GetCollider() { return Collider(body); }
-	bool isCollidingWithCoin(Coin* coin) {
-		if (body.getGlobalBounds().intersects(coin->getGlobalBounds())) {
+	bool isCollidingWithCoin(Coin coin) {
+		if (body.getGlobalBounds().intersects(coin.getGlobalBounds())) {
 			return true;
 		}
 		return false;
