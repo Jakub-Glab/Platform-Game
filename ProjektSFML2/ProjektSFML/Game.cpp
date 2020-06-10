@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Coin.h"
+
 
 Game::Game()
 {
@@ -9,6 +9,7 @@ Game::Game()
 	level = new Level(GroundTextures);
 	player = new Player(&playerTexture, sf::Vector2u(3, 8), 0.1f, 200.0f, 320.0f);
 	//coin1 = new Coin(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(420,230));
+	
 	
 	
 }
@@ -23,7 +24,7 @@ void Game::loadTextures()
 	coinTexture.loadFromFile("CoinSheet.png");
 
 	tlo.loadFromFile("tlo3.jpg");
-
+	//test
 	one = new sf::Texture;
 	one->loadFromFile("1.png");
 	GroundTextures['G'] = one;
@@ -77,16 +78,15 @@ void Game::Update()
 			break;
 		}
 	}
-	
 	player->Update(deltaTime);
 	CheckCollision(direction, 1.0f);
-	
 }
 void Game::TworzCoin()
 {
 	Coin coin1(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(420, 230));
 	coinVec.push_back(coin1);
 	coin1.Draw(*window);
+	coin1.Update(deltaTime);
 	//coin2.Draw(*window);
 	//coin3.Draw(*window);
 	//coin4.Draw(*window);
