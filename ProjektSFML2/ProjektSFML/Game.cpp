@@ -18,12 +18,22 @@ Game::~Game()
 }
 void Game::loadTextures()
 {
-	playerTexture.loadFromFile("spritesheet3.png");
+	if (!playerTexture.loadFromFile("spritesheet3.png"))
+	{
+		std::cout << "Problem z zaladowaniem tekstury gracza nr";
+	}
+	
+	if (!coinsound.loadFromFile("coin.wav"))
+	{
+		std::cout << "Problem z zaladowaniem dzwieku nr. 1";
+	}
+	if (!coinTexture.loadFromFile("CoinSheet.png"))
+	{
+		std::cout << "Problem z zaladowaniem tekstury coin";
+	}
 
-	coinTexture.loadFromFile("CoinSheet.png");
-
+	sound1.setBuffer(coinsound);
 	tlo.loadFromFile("tlo3.jpg");
-	//test
 	one = new sf::Texture;
 	one->loadFromFile("1.png");
 	GroundTextures['G'] = one;
@@ -123,6 +133,7 @@ bool Game::isCollidingWithCoin(Coin* coin)
 {
 	
 		if (this->player->body.getGlobalBounds().intersects(this->coin->ects.getGlobalBounds())) {
+			sound1.play();
 			return true;
 		}
 		return false;

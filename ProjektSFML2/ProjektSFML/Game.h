@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 #include <map>
@@ -39,7 +40,8 @@ public:
 	std::ostringstream Zegar;
 	int score = 0;
 	float c = 0;
-
+	sf::SoundBuffer coinsound;
+	sf::Sound sound1;
 	//Coin* coin;
 	//Coin coin2;
 	//Coin coin3;
