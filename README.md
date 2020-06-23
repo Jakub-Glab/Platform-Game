@@ -11,7 +11,7 @@ Zmiany względem tego co było widoczne na filmie wysłanym 04.06.2020:
 - Dodano kolizje z  elementami mapy,
 - usprawniono animacje.
 
-=======================| TO DO w najbliższym czasie |=======================
+=======================| TO DO w najbliższym czasie |======================
 - uporządkować main.cpp | zrobiono
 - dodanie NPC
 - System żyć
@@ -25,4 +25,4 @@ W planach:
 - zmiana tekstur,
 - system zyć.
 
-======================================================================
+===================================================================
