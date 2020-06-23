@@ -13,6 +13,7 @@ class Game
 {
 public:
 	Player* player;
+	Coin* coin;
 	sf::RenderWindow* window;
 	sf::View* view;
 	Level* level;
@@ -29,7 +30,7 @@ public:
 	sf::Texture tlo;
 	sf::Sprite Tlo;
 	sf::Texture* one = new sf::Texture;
-	std::vector<Coin> coinVec;
+	std::vector<Coin*> coinVec;
 	std::ostringstream ssScore;
 	sf::Text Score;
 	sf::Font font;
@@ -56,6 +57,7 @@ public:
 	void Render();
 	void Licznik();
 	void CheckCollision(sf::Vector2f& direction, float p);
+	bool isCollidingWithCoin(Coin* coin); 
 
 
 };

@@ -18,12 +18,9 @@ public:
 
 	sf::Vector2f GetPosition() { return body.getPosition(); }
 	Collider GetCollider() { return Collider(body); }
-	bool isCollidingWithCoin(Coin coin) {
-		if (body.getGlobalBounds().intersects(coin.getGlobalBounds())) {
-			return true;
-		}
-		return false;
-	}
+	//sf::FloatRect getGlobalBounds() {
+	//	return body.getGlobalBounds();
+	//}
 	sf::RectangleShape body;
 private:
 	

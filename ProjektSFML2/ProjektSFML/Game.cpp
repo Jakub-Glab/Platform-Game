@@ -8,8 +8,7 @@ Game::Game()
 	view = new sf::View(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
 	level = new Level(GroundTextures);
 	player = new Player(&playerTexture, sf::Vector2u(3, 8), 0.1f, 200.0f, 320.0f);
-	//coin1 = new Coin(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(420,230));
-	
+	coin = new Coin(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(420,190));
 	
 	
 }
@@ -40,9 +39,11 @@ void Game::loadTextures()
 	one = new sf::Texture;
 	one->loadFromFile("4.png");
 	GroundTextures['B'] = one;
+	
 }
 void Game::loadData()
 {
+	
 	loadTextures();
 	TworzCoin();
 	Czas();
@@ -78,15 +79,18 @@ void Game::Update()
 			break;
 		}
 	}
+	coin->Update(deltaTime);
 	player->Update(deltaTime);
 	CheckCollision(direction, 1.0f);
 }
 void Game::TworzCoin()
 {
-	Coin coin1(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(420, 230));
-	coinVec.push_back(coin1);
-	coin1.Draw(*window);
-	coin1.Update(deltaTime);
+	//coinTexture.loadFromFile("CoinSheet.png");
+	//Coin coin1(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(420, 230));
+	coinVec.push_back(coin);
+	
+	//coin1.Draw(*window);
+	//coin1.Update(deltaTime);
 	//coin2.Draw(*window);
 	//coin3.Draw(*window);
 	//coin4.Draw(*window);
@@ -110,10 +114,18 @@ void Game::Render()
 			window->draw(level->Matrix[i][j]);
 		}
 	}
+	coin->Draw(*window);
 	Licznik();
-
 	player->Draw(*window);
 	window->display();
+}
+bool Game::isCollidingWithCoin(Coin* coin)
+{
+	
+		if (this->player->body.getGlobalBounds().intersects(this->coin->ects.getGlobalBounds())) {
+			return true;
+		}
+		return false;
 }
 void Game::Licznik()
 {
@@ -130,9 +142,9 @@ void Game::Licznik()
 	Score.setFont(font);
 	Score.setString(ssScore.str());
 	Score.setPosition(view->getCenter().x - 512, view->getCenter().y - 280);
-
+	
 	for (int i = 0; i < coinVec.size(); i++) {
-		if (player->isCollidingWithCoin(coinVec[i])) {
+		if (isCollidingWithCoin(coinVec[i])) {
 			coinVec.erase(coinVec.begin() + i);
 			score++;
 			ssScore.str("");
@@ -140,7 +152,7 @@ void Game::Licznik()
 			Score.setString(ssScore.str());
 		}
 	}
-
+	
 	window->draw(Score);
 	window->draw(licznik);
 	
