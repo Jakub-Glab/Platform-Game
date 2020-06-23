@@ -19,6 +19,7 @@ Zmiany względem tego co było widoczne na filmie wysłanym 04.06.2020:
 
 ==========================| 23.06.2020 |==============================
 - Dodano animacje coinów,
+- Dodano efekt dźwiękowy,
 - Problem z usuwaniem coinów.
 
 W planach:
