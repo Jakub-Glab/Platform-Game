@@ -14,22 +14,26 @@ public:
 	void Update(float deltaTime);
 	void Draw(sf::RenderWindow& window);
 	void OnCollision(sf::Vector2f direction);
+	void DoubleJump();
 	sf::Event event;
-
+	sf::Clock upkeytimer;
+	
 	sf::Vector2f GetPosition() { return body.getPosition(); }
 	Collider GetCollider() { return Collider(body); }
-	//sf::FloatRect getGlobalBounds() {
-	//	return body.getGlobalBounds();
-	//}
+	sf::FloatRect getGlobalBounds() {
+		return body.getGlobalBounds();
+	}
 	sf::RectangleShape body;
+	bool canJump;
 private:
 	
 	Animation animation;
 	unsigned int row;
 	float speed;
+	bool upkey;
 	bool faceRight;
 	sf::Vector2f velocity;
-	bool canJump;
+	
 	float jumpHeight;
 };
 

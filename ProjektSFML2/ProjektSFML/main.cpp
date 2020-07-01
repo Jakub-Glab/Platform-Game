@@ -1,14 +1,14 @@
 #include <SFML/Graphics.hpp>
-#include "Game.h"
+#include "Gra.h"
 
 int main()
 {
 
-	Game* game = new Game;
-	while (game->Run())
+	Gra* gra = new Gra;
+	while (gra->Run())
 	{
-		game->Update();
-		game->Render();
+		gra->Update();
+		gra->Render();
 	}
 
 	return 0;

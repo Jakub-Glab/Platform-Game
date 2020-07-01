@@ -143,22 +143,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animacje.cpp" />
+    <ClCompile Include="CoinMap.cpp" />
     <ClCompile Include="ECTS.cpp" />
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Gra.cpp" />
     <ClCompile Include="Items.cpp" />
     <ClCompile Include="Kolizje.cpp" />
     <ClCompile Include="Mapa.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="STBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animacje.h" />
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="Chmurki.h" />
+    <ClInclude Include="CoinMap.h" />
+    <ClInclude Include="Gra.h" />
     <ClInclude Include="Items.h" />
     <ClInclude Include="Kolizje.h" />
     <ClInclude Include="ECTS.h" />
     <ClInclude Include="Mapa.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="STBlock.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

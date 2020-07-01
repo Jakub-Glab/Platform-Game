@@ -50,7 +50,7 @@ void Items::createItems(std::map<char, sf::Texture*> ItemsTextures)
 		{
 			if (ArrangementItems[i][j] != '0')
 			{
-				//chunk.setRepeated(true);
+				
 				chunk.setTexture(*ItemsTextures[ArrangementItems[i][j]]);
 				chunk.setScale(1.66f, 1.66f);
 				chunk.setPosition(float(j * 128), float(i * 128));

@@ -7,31 +7,53 @@
 #include <sstream>
 #include "Player.h"
 #include "Kolizje.h"
-#include "ECTS.h"
+//#include "ECTS.h"
 #include "Mapa.h"
+#include "Chmurki.h"
+#include "CoinMap.h"
+#include "STBlock.h"
+#include <conio.h>
+#include <Windows.h>
 
-class Game
+class Gra
 {
 public:
+	//Gracz:
 	Player* player;
+	//Coiny:
+	
 	Coin* coin;
 	sf::RenderWindow* window;
 	sf::View* view;
 	Level* level;
+	STLevel* ST_level;
 	sf::Event evnt;
 	sf::Clock clock;
 	sf::Clock clock2;
 	std::map<char, sf::Texture*> GroundTextures;
+	std::map<char, sf::Texture*> CoinTextures;
+	std::map<char, sf::Texture*> ST_textures;
 	float VIEW_HEIGHT = 640.0f;
 	sf::Vector2f direction;
+	sf::Vector2f direction2;
+	sf::Vector2f direction3;
 	float deltaTime = 0.0f;
+	//Tekstury:
 	sf::Texture playerTexture;
-	sf::Texture coinTexture;
+	// old coin:  sf::Texture coinTexture;
 	Collider col = player->GetCollider();
 	sf::Texture tlo;
 	sf::Sprite Tlo;
-	sf::Texture* one = new sf::Texture;
+	//Bloki:
+	sf::Texture* grass = new sf::Texture;
+	sf::Texture* water = new sf::Texture;
+	sf::Texture* wall = new sf::Texture;
+	sf::Texture* box = new sf::Texture;
+	sf::Texture* stone = new sf::Texture;
+	sf::Texture* coinT = new sf::Texture;
+	//Wektor coinów:
 	std::vector<Coin*> coinVec;
+	//Rzeczy do licznika punktów:
 	std::ostringstream ssScore;
 	sf::Text Score;
 	sf::Font font;
@@ -39,27 +61,31 @@ public:
 	sf::Text licznik;
 	std::ostringstream Zegar;
 	int score = 0;
-	float c = 0;
+	float c = 0.0f;
+	//DŸwiêki:
 	sf::SoundBuffer coinsound;
 	sf::Sound sound1;
-	//Coin* coin;
-	//Coin coin2;
-	//Coin coin3;
-	//Coin coin4;
+	std::vector<std::unique_ptr<RuchomySprite>> alien;
+	sf::Clock clock3;
+	sf::Time elapsed3;
 
-	Game();
-	~Game();
+
+	Gra();
+	~Gra();
 	void wysPunkty();
 	void loadTextures();
 	void loadData();
-	void TworzCoin();
+	void Chmurki();
+	//void TworzCoin();
 	void Czas();
 	bool Run();
 	void Update();
 	void Render();
 	void Licznik();
 	void CheckCollision(sf::Vector2f& direction, float p);
-	bool isCollidingWithCoin(Coin* coin); 
+	void CheckCollisionST(sf::Vector2f& direction, float p);
+	void CoinCollision(sf::Vector2f& direction, float p);
+	//bool isCollidingWithCoin(std::vector<Coin*> &coinVec);
 
 
 };
