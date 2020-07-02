@@ -12,6 +12,7 @@ Gra::Gra()
 	// old coin:  coin1 = new Coin(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(300, 210));
 	coin = new Coin(CoinTextures);
 	ST_level = new STLevel(ST_textures);
+	wrog = new Enemies(&enemyTexture, sf::Vector2u(3, 8), 0.075f, 150.0f, 320.0f);
 
 }
 Gra::~Gra()
@@ -30,6 +31,10 @@ void Gra::loadTextures()
 	{
 		std::cout << "Problem z zaladowaniem tekstury gracza nr";
 	}
+	if (!enemyTexture.loadFromFile("Textures/spritesheet4.png"))
+	{
+		std::cout << "Problem z zaladowaniem tekstury wroga nr";
+	}
 
 	if (!coinsound.loadFromFile("coin.wav"))
 	{
@@ -44,6 +49,11 @@ void Gra::loadTextures()
 	{
 		std::cout << "Problem z zaladowaniem dzwieku nr. 3";
 	}
+	if (!damageSound.loadFromFile("damage.wav"))
+	{
+		std::cout << "Problem z zaladowaniem dzwieku nr. 2";
+
+	}
 
 	/*if (!coinTexture.loadFromFile("CoinSheet.png"))
 	{
@@ -53,6 +63,7 @@ void Gra::loadTextures()
 	sound1.setBuffer(coinsound);
 	jump_sound1.setBuffer(jumpSound1);
 	jump_sound2.setBuffer(jumpSound2);
+	damage.setBuffer(damageSound);
 
 	tlo.loadFromFile("Textures/tlo4.jpg");
 
@@ -85,7 +96,7 @@ void Gra::loadTextures()
 	ST_textures['W'] = water;
 
 	stone = new sf::Texture;
-	stone->loadFromFile("Textures/2.png");
+	stone->loadFromFile("Textures/stone.png");
 	GroundTextures['D'] = stone;
 
 	wall = new sf::Texture;
@@ -93,11 +104,11 @@ void Gra::loadTextures()
 	GroundTextures['X'] = wall;
 
 	box = new sf::Texture;
-	box->loadFromFile("Textures/4.png");
+	box->loadFromFile("Textures/box.png");
 	GroundTextures['B'] = box;
 
 	coinT = new sf::Texture;
-	coinT->loadFromFile("Textures/coinP.png");
+	coinT->loadFromFile("Textures/cointext.png");
 	CoinTextures['C'] = coinT;
 }
 void Gra::loadData()
@@ -165,9 +176,13 @@ void Gra::Update()
 	// old coin:  coin->Update(deltaTime);
 	// old coin:  coin1->Update(deltaTime);
 	player->Update(deltaTime);
-	CheckCollision(direction, 1.0f);
-	CheckCollisionST(direction2, 1.0f);
+	wrog->Update(deltaTime);
+	PlayerCollision(direction, 1.0f);
+	EnemyCollision(direction, 1.0f);
+	PlayerCollisionST(direction2, 1.0f);
+	EnemyCollisionST(direction2, 1.0f);
 	CoinCollision(direction3, 1.0f);
+	CombatCollision(direction, 1.0f);
 }
 /*void Gra::TworzCoin()
 {
@@ -204,13 +219,14 @@ void Gra::Render()
 	window->draw(Tlo);
 	window->setView(*view);
 	Tlo.setPosition(view->getCenter().x - 512, view->getCenter().y - 320);
-//	Chmurki();
+
 	
 	for (size_t i = 0; i < alien.size(); i++)
 	{
 		window->draw(*alien[i]);
 	}
 	player->Draw(*window);
+	wrog->Draw(*window);
 	for (int i = 0; i < level->Matrix.size(); i++)
 	{
 		for (int j = 0; j < level->Matrix[i].size(); j++)
@@ -280,7 +296,7 @@ void Gra::Licznik()
 	window->draw(licznik);
 
 }
-void Gra::CheckCollision(sf::Vector2f& direction, float p)
+void Gra::PlayerCollision(sf::Vector2f& direction, float p)
 {
 	float deltax;
 	float deltay;
@@ -362,7 +378,172 @@ void Gra::CheckCollision(sf::Vector2f& direction, float p)
 	}
 
 }
-void Gra::CheckCollisionST(sf::Vector2f& direction, float p)
+void Gra::CombatCollision(sf::Vector2f& direction, float p)
+{
+	float deltax;
+	float deltay;
+	float intersectX;
+	float intersectY;
+
+	
+			sf::Vector2f thisposition = this->wrog->GetPosition();
+			sf::Vector2f otherposition = this->player->GetPosition();
+			sf::Vector2f thishalfsize = this->wrog->body.getSize() / 2.0f;
+			sf::Vector2f otherhalfsize = this->player->body.getSize() / 2.0f;
+
+			bool t;
+
+			deltax = otherposition.x - thisposition.x;
+			deltay = otherposition.y - thisposition.y;
+
+			intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
+			intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
+
+			if (intersectX < 0.0f && intersectY < 0.0f)
+			{
+				p = std::min(std::max(p, 0.0f), 1.0f);
+
+				if (intersectX > intersectY)
+				{
+					if (deltax > 0.0f)
+					{
+						this->wrog->body.move(intersectX * (1.0f - p), 0.0f);
+						this->player->body.move(-intersectX * p, 0.0f);
+						
+						player->body.setPosition(200, 320);
+						direction.x = 1.0f;
+						direction.y = 0.0f;
+						damage.play();
+					}
+					else
+					{
+						this->wrog->body.move(-intersectX * (1.0f - p), 0.0f);
+						this->player->body.move(intersectX * p, 0.0f);
+						player->body.setPosition(200, 320);
+						direction.x = -1.0f;
+						direction.y = 0.0f;
+						damage.play();
+					}
+				}
+				else
+				{
+					if (deltay > 0.0f)
+					{
+						this->wrog->body.move(0.0f, intersectY * (1.0f - p));
+						this->player->body.move(0.0f, -intersectY * p);
+						direction.x = 0.0f;
+						direction.y = 1.0f;
+					}
+					else
+					{
+						this->wrog->body.move(0.0f, -intersectY * (1.0f - p));
+						this->player->body.move(0.0f, intersectY * p);
+						wrog->body.setPosition(100, 380);
+						direction.x = 0.0f;
+						direction.y = -1.0f;
+						damage.play();
+					}
+				}
+
+				t = true;
+
+			}
+			else {
+				t = false;
+			}
+			if (t == true)
+			{
+				this->player->OnCollision(direction);
+				this->wrog->OnCollision(direction);
+			}
+		
+
+	
+
+}
+void Gra::EnemyCollision(sf::Vector2f& direction, float p)
+{
+	float deltax;
+	float deltay;
+	float intersectX;
+	float intersectY;
+
+	for (size_t i = 0; i < this->level->Matrix.size(); i++)
+	{
+		for (size_t j = 0; j < this->level->Matrix[i].size(); j++)
+		{
+			sf::Vector2f thisposition = this->level->Matrix[i][j].getPosition();
+			sf::Vector2f otherposition = this->wrog->GetPosition();
+			sf::Vector2f thishalfsize(this->level->Matrix[i][j].getGlobalBounds().width / 2.0f, (level->Matrix[i][j].getGlobalBounds().height) / 2.0f);
+			sf::Vector2f otherhalfsize = this->wrog->body.getSize() / 2.0f;
+
+			bool t;
+
+			deltax = otherposition.x - thisposition.x;
+			deltay = otherposition.y - thisposition.y;
+
+			intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
+			intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
+
+			if (intersectX < 0.0f && intersectY < 0.0f)
+			{
+				p = std::min(std::max(p, 0.0f), 1.0f);
+
+				if (intersectX > intersectY)
+				{
+					if (deltax > 0.0f)
+					{
+						this->level->Matrix[i][j].move(intersectX * (1.0f - p), 0.0f);
+						this->wrog->body.move(-intersectX * p, 0.0f);
+						wrog->odbicieP();
+						direction.x = 1.0f;
+						direction.y = 0.0f;
+					}
+					else
+					{
+						this->level->Matrix[i][j].move(-intersectX * (1.0f - p), 0.0f);
+						this->wrog->body.move(intersectX * p, 0.0f);
+						wrog->odbicieL();
+						direction.x = -1.0f;
+						direction.y = 0.0f;
+					}
+				}
+				else
+				{
+					if (deltay > 0.0f)
+					{
+						this->level->Matrix[i][j].move(0.0f, intersectY * (1.0f - p));
+						this->wrog->body.move(0.0f, -intersectY * p);
+
+						direction.x = 0.0f;
+						direction.y = 1.0f;
+					}
+					else
+					{
+						this->level->Matrix[i][j].move(0.0f, -intersectY * (1.0f - p));
+						this->wrog->body.move(0.0f, intersectY * p);
+
+						direction.x = 0.0f;
+						direction.y = -1.0f;
+					}
+				}
+
+				t = true;
+
+			}
+			else {
+				t = false;
+			}
+			if (t == true)
+			{
+				this->wrog->OnCollision(direction);
+			}
+		}
+
+	}
+
+}
+void Gra::PlayerCollisionST(sf::Vector2f& direction, float p)
 {
 	
 	float deltax;
@@ -376,7 +557,7 @@ void Gra::CheckCollisionST(sf::Vector2f& direction, float p)
 		{
 			sf::Vector2f thisposition = this->ST_level->MatrixST[i][j].getPosition();
 			sf::Vector2f otherposition = this->player->GetPosition();
-			sf::Vector2f thishalfsize(this->ST_level->MatrixST[i][j].getGlobalBounds().width / 2.0f, (ST_level->MatrixST[i][j].getGlobalBounds().height - 7) / 2.0f);
+			sf::Vector2f thishalfsize(this->ST_level->MatrixST[i][j].getGlobalBounds().width / 2.0f, (ST_level->MatrixST[i][j].getGlobalBounds().height - 11) / 2.0f);
 			sf::Vector2f otherhalfsize = this->player->body.getSize() / 2.0f;
 
 			bool t;
@@ -444,6 +625,89 @@ void Gra::CheckCollisionST(sf::Vector2f& direction, float p)
 
 	}
 	
+}
+void Gra::EnemyCollisionST(sf::Vector2f& direction, float p)
+{
+
+	float deltax;
+	float deltay;
+	float intersectX;
+	float intersectY;
+
+	for (size_t i = 0; i < this->ST_level->MatrixST.size(); i++)
+	{
+		for (size_t j = 0; j < this->ST_level->MatrixST[i].size(); j++)
+		{
+			sf::Vector2f thisposition = this->ST_level->MatrixST[i][j].getPosition();
+			sf::Vector2f otherposition = this->wrog->GetPosition();
+			sf::Vector2f thishalfsize(this->ST_level->MatrixST[i][j].getGlobalBounds().width / 2.0f, (ST_level->MatrixST[i][j].getGlobalBounds().height - 11) / 2.0f);
+			sf::Vector2f otherhalfsize = this->wrog->body.getSize() / 2.0f;
+
+			bool t;
+
+			deltax = otherposition.x - thisposition.x;
+			deltay = otherposition.y - thisposition.y;
+
+			intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
+			intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
+
+			if (intersectX < 0.0f && intersectY < 0.0f)
+			{
+				p = std::min(std::max(p, 0.0f), 1.0f);
+
+				if (intersectX > intersectY)
+				{
+					if (deltax > 0.0f)
+					{
+						this->ST_level->MatrixST[i][j].move(intersectX * (1.0f - p), 0.0f);
+						this->wrog->body.move(-intersectX * p, 0.0f);
+						wrog->odbicieP();
+						direction.x = 1.0f;
+						direction.y = 0.0f;
+					}
+					else
+					{
+						this->ST_level->MatrixST[i][j].move(-intersectX * (1.0f - p), 0.0f);
+						this->wrog->body.move(intersectX * p, 0.0f);
+						wrog->odbicieL();
+						direction.x = -1.0f;
+						direction.y = 0.0f;
+					}
+				}
+				else
+				{
+					if (deltay > 0.0f)
+					{
+						this->ST_level->MatrixST[i][j].move(0.0f, intersectY * (1.0f - p));
+						this->wrog->body.move(0.0f, -intersectY * p);
+
+						direction.x = 0.0f;
+						direction.y = 1.0f;
+					}
+					else
+					{
+						this->ST_level->MatrixST[i][j].move(0.0f, -intersectY * (1.0f - p));
+						this->wrog->body.move(0.0f, intersectY * p);
+
+						direction.x = 0.0f;
+						direction.y = -1.0f;
+					}
+				}
+
+				t = true;
+
+			}
+			else {
+				t = false;
+			}
+			if (t == true)
+			{
+				this->wrog->OnCollision(direction);
+			}
+		}
+
+	}
+
 }
 void Gra::CoinCollision(sf::Vector2f& direction, float p)
 {

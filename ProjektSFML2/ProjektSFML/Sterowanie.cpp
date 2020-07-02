@@ -37,7 +37,7 @@ void Sterowanie::Render()
 
 	window->draw(Sprite);
 
-	Sprite.setPosition(0, 0);
+	Sprite.setOrigin(0, 0);
 
 	window->display();
 }

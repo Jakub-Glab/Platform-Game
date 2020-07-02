@@ -31,6 +31,15 @@ int main()
 		std::cout << "Problem z zaladowaniem dzwieku nr. 1";
 	}
 	menu_sound.setBuffer(MenuSound);
+
+	sf::SoundBuffer MenuEnter;
+	sf::Sound menu_enter;
+	if (!MenuEnter.loadFromFile("entermenu.ogg"))
+	{
+		std::cout << "Problem z zaladowaniem dzwieku nr. 1";
+	}
+	menu_enter.setBuffer(MenuEnter);
+
 	std::vector<std::unique_ptr<RuchomySprite>> alien;
 
 	for (int i = 0; i < 2; i++)
@@ -67,6 +76,7 @@ int main()
 			switch (event.type)
 			{
 			case sf::Event::KeyReleased:
+				
 				switch (event.key.code)
 				{
 				case sf::Keyboard::Up:
@@ -80,10 +90,12 @@ int main()
 					break;
 
 				case sf::Keyboard::Return:
+					menu_enter.play();
 					switch (menu.GetPressedItem())
 					{
 					case 0:
 					{
+						
 						Gra* gra = new Gra;
 						while (gra->Run())
 						{

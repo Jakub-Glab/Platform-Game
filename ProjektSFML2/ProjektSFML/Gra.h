@@ -6,6 +6,7 @@
 #include <map>
 #include <sstream>
 #include "Player.h"
+#include "Enemies.h"
 #include "Kolizje.h"
 //#include "ECTS.h"
 #include "Mapa.h"
@@ -21,7 +22,7 @@ public:
 	//Gracz:
 	Player* player;
 	//Coiny:
-	
+	Enemies* wrog;
 	Coin* coin;
 	sf::RenderWindow* window;
 	sf::View* view;
@@ -40,6 +41,7 @@ public:
 	float deltaTime = 0.0f;
 	//Tekstury:
 	sf::Texture playerTexture;
+	sf::Texture enemyTexture;
 	// old coin:  sf::Texture coinTexture;
 	Collider col = player->GetCollider();
 	sf::Texture tlo;
@@ -66,10 +68,13 @@ public:
 	sf::SoundBuffer coinsound;
 	sf::SoundBuffer jumpSound1;
 	sf::SoundBuffer jumpSound2;
+	sf::SoundBuffer damageSound;
 	sf::Sound sound1;
+	sf::Sound damage;
 	sf::Sound jump_sound1;
 	sf::Sound jump_sound2;
 	std::vector<std::unique_ptr<RuchomySprite>> alien;
+	//std::vector<std::unique_ptr<Enemies>> wrog;
 	sf::Clock clock3;
 	sf::Time elapsed3;
 
@@ -86,8 +91,11 @@ public:
 	void Update();
 	void Render();
 	void Licznik();
-	void CheckCollision(sf::Vector2f& direction, float p);
-	void CheckCollisionST(sf::Vector2f& direction, float p);
+	void PlayerCollision(sf::Vector2f& direction, float p);
+	void EnemyCollision(sf::Vector2f& direction, float p);
+	void PlayerCollisionST(sf::Vector2f& direction, float p);
+	void CombatCollision(sf::Vector2f& direction, float p);
+	void EnemyCollisionST(sf::Vector2f& direction, float p);
 	void CoinCollision(sf::Vector2f& direction, float p);
 	//bool isCollidingWithCoin(std::vector<Coin*> &coinVec);
 
