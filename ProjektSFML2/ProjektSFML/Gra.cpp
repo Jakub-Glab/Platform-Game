@@ -43,50 +43,50 @@ void Gra::loadTextures()
 
 	sound1.setBuffer(coinsound);
 
-	tlo.loadFromFile("tlo4.jpg");
+	tlo.loadFromFile("Textures/tlo4.jpg");
 
 	grass = new sf::Texture;
-	grass->loadFromFile("grass.png");
+	grass->loadFromFile("Textures/grass.png");
 	ST_textures['G'] = grass;
 
 	grass = new sf::Texture;
-	grass->loadFromFile("grass2.png");
+	grass->loadFromFile("Textures/grass2.png");
 	ST_textures['2'] = grass;
 
 	grass = new sf::Texture;
-	grass->loadFromFile("grass3.png");
+	grass->loadFromFile("Textures/grass3.png");
 	ST_textures['3'] = grass;
 
 	grass = new sf::Texture;
-	grass->loadFromFile("grassCorner1.png");
+	grass->loadFromFile("Textures/grassCorner1.png");
 	ST_textures['4'] = grass;
 
 	grass = new sf::Texture;
-	grass->loadFromFile("grassCorner2.png");
+	grass->loadFromFile("Textures/grassCorner2.png");
 	ST_textures['5'] = grass;
 
 	grass = new sf::Texture;
-	grass->loadFromFile("grassfull.png");
+	grass->loadFromFile("Textures/grassfull.png");
 	ST_textures['6'] = grass;
 
 	water = new sf::Texture;
-	water->loadFromFile("water.png");
+	water->loadFromFile("Textures/water.png");
 	ST_textures['W'] = water;
 
 	stone = new sf::Texture;
-	stone->loadFromFile("2.png");
+	stone->loadFromFile("Textures/2.png");
 	GroundTextures['D'] = stone;
 
 	wall = new sf::Texture;
-	wall->loadFromFile("3.png");
+	wall->loadFromFile("Textures/3.png");
 	GroundTextures['X'] = wall;
 
 	box = new sf::Texture;
-	box->loadFromFile("4.png");
+	box->loadFromFile("Textures/4.png");
 	GroundTextures['B'] = box;
 
 	coinT = new sf::Texture;
-	coinT->loadFromFile("coinP.png");
+	coinT->loadFromFile("Textures/coinP.png");
 	CoinTextures['C'] = coinT;
 }
 void Gra::loadData()
@@ -163,7 +163,7 @@ void Gra::Chmurki()
 {
 	for (int i = 0; i < 5; i++)
 	{
-		alien.emplace_back(std::make_unique<Duch>("chmurka.png"));
+		alien.emplace_back(std::make_unique<Duch>("Textures/chmurka.png"));
 		float pleaceX;
 		float pleaceY;
 	

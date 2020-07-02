@@ -5,6 +5,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <ctime>
+#include <stdlib.h>
+#include <time.h>
 #include <Windows.h>
 using namespace std;
 class RuchomySprite :public sf::Sprite
@@ -54,14 +56,20 @@ public:
         }
     }
     void Animuj2(const sf::Time& elapsed) {
+        vx = -50.0f;
         this->move(vx * elapsed.asSeconds(), vy * elapsed.asSeconds());
 
+        srand(time(NULL));
+        int x = rand() % 10 + 100;
         if (this->getPosition().x < -250)
         {
-            this->setPosition(680.0f, 50);
+            this->setPosition(680.0f, x);
         }
-      
+       
     }
+   
+
+
 
 
 };

@@ -6,7 +6,7 @@ Sterowanie::Sterowanie()
 }
 void Sterowanie::loadTextures()
 {
-	tlo.loadFromFile("tlo5.png");
+	tlo.loadFromFile("Textures/tlo5.png");
 }
 void Sterowanie::loadData()
 {

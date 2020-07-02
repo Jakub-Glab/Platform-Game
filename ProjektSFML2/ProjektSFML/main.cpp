@@ -9,16 +9,17 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Gra MENU");
 	sf::Clock clock;
 	sf::Time elapsed;
+	srand(time(NULL));
 
 	Menu menu(window.getSize().x, window.getSize().y);
 	sf::Texture texture;
-	texture.loadFromFile("background.png");
+	texture.loadFromFile("Textures/background.png");
 	sf::Sprite sprite;
 	sprite.setTexture(texture);
 	sprite.setPosition(0, 0);
 
 	sf::Texture texture2;
-	texture2.loadFromFile("background2.png");
+	texture2.loadFromFile("Textures/background2.png");
 	sf::Sprite sprite2;
 	sprite2.setTexture(texture2);
 	sprite2.setPosition(0, 0);
@@ -27,7 +28,7 @@ int main()
 
 	for (int i = 0; i < 2; i++)
 	{
-		alien.emplace_back(std::make_unique<Duch>("chmurka.png"));
+		alien.emplace_back(std::make_unique<Duch>("Textures/chmurka.png"));
 	}
 	float pleaceX;
 	float pleaceY;
