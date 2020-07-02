@@ -24,6 +24,13 @@ int main()
 	sprite2.setTexture(texture2);
 	sprite2.setPosition(0, 0);
 
+	sf::SoundBuffer MenuSound;
+	sf::Sound menu_sound;
+	if (!MenuSound.loadFromFile("menusound.wav"))
+	{
+		std::cout << "Problem z zaladowaniem dzwieku nr. 1";
+	}
+	menu_sound.setBuffer(MenuSound);
 	std::vector<std::unique_ptr<RuchomySprite>> alien;
 
 	for (int i = 0; i < 2; i++)
@@ -63,10 +70,12 @@ int main()
 				switch (event.key.code)
 				{
 				case sf::Keyboard::Up:
+					menu_sound.play();
 					menu.MoveUp();
 					break;
 
 				case sf::Keyboard::Down:
+					menu_sound.play();
 					menu.MoveDown();
 					break;
 
