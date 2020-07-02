@@ -35,6 +35,15 @@ void Gra::loadTextures()
 	{
 		std::cout << "Problem z zaladowaniem dzwieku nr. 1";
 	}
+	if (!jumpSound1.loadFromFile("jump1.ogg"))
+	{
+		std::cout << "Problem z zaladowaniem dzwieku nr. 2";
+
+	}
+	if (!jumpSound2.loadFromFile("jump2.ogg"))
+	{
+		std::cout << "Problem z zaladowaniem dzwieku nr. 3";
+	}
 
 	/*if (!coinTexture.loadFromFile("CoinSheet.png"))
 	{
@@ -42,6 +51,8 @@ void Gra::loadTextures()
 	}*/
 
 	sound1.setBuffer(coinsound);
+	jump_sound1.setBuffer(jumpSound1);
+	jump_sound2.setBuffer(jumpSound2);
 
 	tlo.loadFromFile("Textures/tlo4.jpg");
 
@@ -136,8 +147,12 @@ void Gra::Update()
 		{
 			if (evnt.key.code == sf::Keyboard::Space)
 			{
-				//player->canJump = false;
+				jump_sound1.play();
 				player->DoubleJump();
+			}
+			if (evnt.key.code == sf::Keyboard::W)
+			{
+				jump_sound1.play();
 			}
 		}
 

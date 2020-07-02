@@ -64,7 +64,11 @@ public:
 	float c = 0.0f;
 	//DŸwiêki:
 	sf::SoundBuffer coinsound;
+	sf::SoundBuffer jumpSound1;
+	sf::SoundBuffer jumpSound2;
 	sf::Sound sound1;
+	sf::Sound jump_sound1;
+	sf::Sound jump_sound2;
 	std::vector<std::unique_ptr<RuchomySprite>> alien;
 	sf::Clock clock3;
 	sf::Time elapsed3;
