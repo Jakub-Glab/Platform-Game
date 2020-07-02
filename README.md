@@ -27,4 +27,8 @@ W planach:
 - zmiana tekstur,
 - system zyć.
 
+==========================| 01.07.2020 |==============================
+- Zmieniono sposób renderownia coinów (TileMapa)
+- zmieniono tesktury.
+
 ================================================================
