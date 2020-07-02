@@ -190,12 +190,12 @@ void Gra::Render()
 	window->setView(*view);
 	Tlo.setPosition(view->getCenter().x - 512, view->getCenter().y - 320);
 //	Chmurki();
-	player->Draw(*window);
+	
 	for (size_t i = 0; i < alien.size(); i++)
 	{
 		window->draw(*alien[i]);
 	}
-	
+	player->Draw(*window);
 	for (int i = 0; i < level->Matrix.size(); i++)
 	{
 		for (int j = 0; j < level->Matrix[i].size(); j++)
@@ -361,7 +361,7 @@ void Gra::CheckCollisionST(sf::Vector2f& direction, float p)
 		{
 			sf::Vector2f thisposition = this->ST_level->MatrixST[i][j].getPosition();
 			sf::Vector2f otherposition = this->player->GetPosition();
-			sf::Vector2f thishalfsize(this->ST_level->MatrixST[i][j].getGlobalBounds().width / 2.0f, (ST_level->MatrixST[i][j].getGlobalBounds().height - 10) / 2.0f);
+			sf::Vector2f thishalfsize(this->ST_level->MatrixST[i][j].getGlobalBounds().width / 2.0f, (ST_level->MatrixST[i][j].getGlobalBounds().height - 7) / 2.0f);
 			sf::Vector2f otherhalfsize = this->player->body.getSize() / 2.0f;
 
 			bool t;

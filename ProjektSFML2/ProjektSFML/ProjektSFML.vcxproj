@@ -150,8 +150,10 @@
     <ClCompile Include="Kolizje.cpp" />
     <ClCompile Include="Mapa.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="STBlock.cpp" />
+    <ClCompile Include="Sterowanie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animacje.h" />
@@ -162,8 +164,10 @@
     <ClInclude Include="Kolizje.h" />
     <ClInclude Include="ECTS.h" />
     <ClInclude Include="Mapa.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="STBlock.h" />
+    <ClInclude Include="Sterowanie.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

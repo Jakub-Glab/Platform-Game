@@ -13,6 +13,7 @@ public:
     RuchomySprite() :Sprite() {};
     virtual ~RuchomySprite() = default;
     virtual void Animuj(const sf::Time& elapsed) = 0;
+    virtual void Animuj2(const sf::Time& elapsed) = 0;
 };
 class Duch : public RuchomySprite
 {
@@ -51,6 +52,15 @@ public:
             this->setPosition(70.0f, this->getPosition().y);
             vx = 50.0f;
         }
+    }
+    void Animuj2(const sf::Time& elapsed) {
+        this->move(vx * elapsed.asSeconds(), vy * elapsed.asSeconds());
+
+        if (this->getPosition().x < -250)
+        {
+            this->setPosition(680.0f, 50);
+        }
+      
     }
 
 
