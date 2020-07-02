@@ -16,7 +16,7 @@ STLevel::~STLevel()
 
 void STLevel::loadMapST()
 {
-	std::ifstream file("mapaST.txt");
+	std::ifstream file("Maps/mapaST.txt");
 	std::string charLine;
 	std::vector<char> mapLine;
 	if (file.is_open())
@@ -45,7 +45,7 @@ void STLevel::createMapST(std::map<char, sf::Texture*> ST_textures)
 		for (int j = 0; j < STArrangement[i].size(); j++)
 		{
 
-			if (STArrangement[i][j] != 'O')
+			if (STArrangement[i][j] != '0')
 			{
 				chunk.setTexture(*ST_textures[STArrangement[i][j]]);
 				chunk.setScale(1.0f, 1.0f);

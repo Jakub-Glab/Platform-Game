@@ -27,31 +27,31 @@ Gra::~Gra()
 }
 void Gra::loadTextures()
 {
-	if (!playerTexture.loadFromFile("spritesheet3.png"))
+	if (!playerTexture.loadFromFile("Textures/player_texture.png"))
 	{
-		std::cout << "Problem z zaladowaniem tekstury gracza nr";
+		std::cout << "Problem z zaladowaniem tekstury gracza";
 	}
-	if (!enemyTexture.loadFromFile("Textures/spritesheet4.png"))
+	if (!enemyTexture.loadFromFile("Textures/enemy_texture.png"))
 	{
-		std::cout << "Problem z zaladowaniem tekstury wroga nr";
+		std::cout << "Problem z zaladowaniem tekstury wroga";
 	}
 
-	if (!coinsound.loadFromFile("coin.wav"))
+	if (!coinsound.loadFromFile("Sounds/coin.wav"))
 	{
 		std::cout << "Problem z zaladowaniem dzwieku nr. 1";
 	}
-	if (!jumpSound1.loadFromFile("jump1.ogg"))
+	if (!jumpSound1.loadFromFile("Sounds/jump1.ogg"))
 	{
 		std::cout << "Problem z zaladowaniem dzwieku nr. 2";
 
 	}
-	if (!jumpSound2.loadFromFile("jump2.ogg"))
+	if (!jumpSound2.loadFromFile("Sounds/jump2.ogg"))
 	{
 		std::cout << "Problem z zaladowaniem dzwieku nr. 3";
 	}
-	if (!damageSound.loadFromFile("damage.wav"))
+	if (!damageSound.loadFromFile("/Soundsdamage.wav"))
 	{
-		std::cout << "Problem z zaladowaniem dzwieku nr. 2";
+		std::cout << "Problem z zaladowaniem dzwieku nr. 4";
 
 	}
 
@@ -91,6 +91,10 @@ void Gra::loadTextures()
 	grass->loadFromFile("Textures/grassfull.png");
 	ST_textures['6'] = grass;
 
+	grass = new sf::Texture;
+	grass->loadFromFile("Textures/dirt.png");
+	GroundTextures['7'] = grass;
+
 	water = new sf::Texture;
 	water->loadFromFile("Textures/water.png");
 	ST_textures['W'] = water;
@@ -110,6 +114,13 @@ void Gra::loadTextures()
 	coinT = new sf::Texture;
 	coinT->loadFromFile("Textures/cointext.png");
 	CoinTextures['C'] = coinT;
+
+	if (!font.loadFromFile("Fonts/font.ttf"))
+	{
+		std::cout << "Blad z zaladowaniem czcionki!!" << std::endl;
+	}
+	Oceny.setFillColor(sf::Color::Green);
+	
 }
 void Gra::loadData()
 {
@@ -118,6 +129,7 @@ void Gra::loadData()
 	//TworzCoin();
 	Czas();
 	wysPunkty();
+	wysZycie();
 }
 void Gra::Czas()
 {
@@ -130,9 +142,36 @@ bool Gra::Run()
 {
 	return window->isOpen();
 }
+void Gra::wysZycie()
+{
+	if (zycie > 4) { zycie = 4; }
+	if (zycie == 4) { ssOceny << " Bdb "; Oceny.setFillColor(sf::Color::Green); }
+	if (zycie == 3.5) { ssOceny << " Db + "; Oceny.setFillColor(sf::Color::Green); }
+	if (zycie == 3) { ssOceny << " Db "; Oceny.setFillColor(sf::Color::Green); }
+	if (zycie == 2.5) { ssOceny << " Dst + "; Oceny.setFillColor(sf::Color::Yellow); }
+	if (zycie == 2) { ssOceny << " Dst "; Oceny.setFillColor(sf::Color::Yellow); }
+	if (zycie == 1.5)
+	{
+		ssOceny << " ndst ";
+		Oceny.setFillColor(sf::Color::Red);
+		ssEnd << "PRZEGRALES GRE";
+		window->draw(Koniec);
+		Sleep(3000);
+		window->close();
+	}
+	if (zycie == 1)
+	{
+		ssOceny << " ndst ";
+		Oceny.setFillColor(sf::Color::Red);
+		ssEnd << "PRZEGRALES GRE";
+		window->draw(Koniec);
+		Sleep(3000);
+		window->close();
+	}
+}
 void Gra::wysPunkty()
 {
-	if (score == 0) ssScore << "Punkty ECTS: " << "[" << score << "]";
+	if (score == 0) ssScore << "Punkty ECTS: " <<score;
 }
 void Gra::Update()
 {
@@ -212,6 +251,7 @@ void Gra::Chmurki()
 }
 void Gra::Render()
 {
+	
 
 	Tlo.setTexture(tlo);
 	view->setCenter(player->GetPosition());
@@ -221,24 +261,26 @@ void Gra::Render()
 	Tlo.setPosition(view->getCenter().x - 512, view->getCenter().y - 320);
 
 	
+
 	for (size_t i = 0; i < alien.size(); i++)
 	{
 		window->draw(*alien[i]);
 	}
 	player->Draw(*window);
 	wrog->Draw(*window);
-	for (int i = 0; i < level->Matrix.size(); i++)
-	{
-		for (int j = 0; j < level->Matrix[i].size(); j++)
-		{
-			window->draw(level->Matrix[i][j]);
-		}
-	}
+	
 	for (int i = 0; i < ST_level->MatrixST.size(); i++)
 	{
 		for (int j = 0; j < ST_level->MatrixST[i].size(); j++)
 		{
 			window->draw(ST_level->MatrixST[i][j]);
+		}
+	}
+	for (int i = 0; i < level->Matrix.size(); i++)
+	{
+		for (int j = 0; j < level->Matrix[i].size(); j++)
+		{
+			window->draw(level->Matrix[i][j]);
 		}
 	}
 	for (int i = 0; i < coin->MatrixCoin.size(); i++)
@@ -268,7 +310,7 @@ void Gra::Render()
 }*/
 void Gra::Licznik()
 {
-	font.loadFromFile("font.ttf");
+	
 	/*
 	licznik.setCharacterSize(35);
 	licznik.setFillColor(sf::Color::Red);
@@ -276,11 +318,7 @@ void Gra::Licznik()
 	licznik.setString(Zegar.str());
 	licznik.setPosition(view->getCenter().x - 512, view->getCenter().y - 180);
 	*/
-	Score.setCharacterSize(45);
-	Score.setFillColor(sf::Color::Red);
-	Score.setFont(font);
-	Score.setString(ssScore.str());
-	Score.setPosition(view->getCenter().x - 512, view->getCenter().y - 280);
+	
 	/* old coin:  
 	for (int i = 0; i < coinVec.size(); i++) {
 		if (isCollidingWithCoin(coinVec)) {
@@ -292,8 +330,28 @@ void Gra::Licznik()
 		}
 	}
 	*/
+
+	Score.setCharacterSize(35);
+	Score.setFillColor(sf::Color::Red);
+	Score.setFont(font);
+	Score.setString(ssScore.str());
+	Score.setPosition(view->getCenter().x - 512, view->getCenter().y - 280);
+
+	Oceny.setCharacterSize(35);
+	Oceny.setFont(font);
+	Oceny.setString(ssOceny.str());
+	Oceny.setPosition(view->getCenter().x - 540, view->getCenter().y - 320);
+
+	Koniec.setCharacterSize(35);
+	Koniec.setFillColor(sf::Color::Red);
+	Koniec.setFont(font);
+	Koniec.setString(ssEnd.str());
+	Koniec.setPosition(view->getCenter().x - 512, view->getCenter().y - 240);
+
+	window->draw(Oceny);
 	window->draw(Score);
 	window->draw(licznik);
+	
 
 }
 void Gra::PlayerCollision(sf::Vector2f& direction, float p)
@@ -410,19 +468,25 @@ void Gra::CombatCollision(sf::Vector2f& direction, float p)
 						this->wrog->body.move(intersectX * (1.0f - p), 0.0f);
 						this->player->body.move(-intersectX * p, 0.0f);
 						
-						player->body.setPosition(200, 320);
+						player->body.setPosition(256, 1152);
 						direction.x = 1.0f;
 						direction.y = 0.0f;
 						damage.play();
+						zycie--;
+						ssOceny.str("");
+						wysZycie();
 					}
 					else
 					{
 						this->wrog->body.move(-intersectX * (1.0f - p), 0.0f);
 						this->player->body.move(intersectX * p, 0.0f);
-						player->body.setPosition(200, 320);
+						player->body.setPosition(256, 1152);
 						direction.x = -1.0f;
 						direction.y = 0.0f;
 						damage.play();
+						zycie--;
+						ssOceny.str("");
+						wysZycie();
 					}
 				}
 				else
@@ -438,10 +502,13 @@ void Gra::CombatCollision(sf::Vector2f& direction, float p)
 					{
 						this->wrog->body.move(0.0f, -intersectY * (1.0f - p));
 						this->player->body.move(0.0f, intersectY * p);
-						wrog->body.setPosition(100, 380);
+						wrog->body.setPosition(256, 1152);
 						direction.x = 0.0f;
 						direction.y = -1.0f;
 						damage.play();
+						zycie += 0.5;
+						ssOceny.str("");
+						wysZycie();
 					}
 				}
 

@@ -57,6 +57,8 @@ public:
 	std::vector<Coin*> coinVec;
 	//Rzeczy do licznika punktów:
 	std::ostringstream ssScore;
+	std::ostringstream ssOceny;
+	std::ostringstream ssEnd;
 	sf::Text Score;
 	sf::Font font;
 	sf::Time elapsed1 = clock2.getElapsedTime();
@@ -77,11 +79,15 @@ public:
 	//std::vector<std::unique_ptr<Enemies>> wrog;
 	sf::Clock clock3;
 	sf::Time elapsed3;
+	sf::Text Oceny;
+	sf::Text Koniec;
 
+	float zycie = 4;
 
 	Gra();
 	~Gra();
 	void wysPunkty();
+	void wysZycie();
 	void loadTextures();
 	void loadData();
 	void Chmurki();

@@ -26,7 +26,7 @@ int main()
 
 	sf::SoundBuffer MenuSound;
 	sf::Sound menu_sound;
-	if (!MenuSound.loadFromFile("menusound.wav"))
+	if (!MenuSound.loadFromFile("Sounds/menusound.wav"))
 	{
 		std::cout << "Problem z zaladowaniem dzwieku nr. 1";
 	}
@@ -34,7 +34,7 @@ int main()
 
 	sf::SoundBuffer MenuEnter;
 	sf::Sound menu_enter;
-	if (!MenuEnter.loadFromFile("entermenu.ogg"))
+	if (!MenuEnter.loadFromFile("Sounds/entermenu.ogg"))
 	{
 		std::cout << "Problem z zaladowaniem dzwieku nr. 1";
 	}

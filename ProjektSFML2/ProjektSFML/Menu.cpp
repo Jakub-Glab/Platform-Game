@@ -2,7 +2,7 @@
 
 Menu::Menu(float width, float height)
 {
-	if (!font.loadFromFile("font.ttf"))
+	if (!font.loadFromFile("Fonts/font.ttf"))
 	{
 		std::cout << "Blad z zaladowaniem czcionki!!" << std::endl;
 	}

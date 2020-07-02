@@ -15,7 +15,7 @@ Level::~Level()
 
 void Level::loadMap()
 {
-	std::ifstream file("mapa.txt");
+	std::ifstream file("Maps/mapa.txt");
 	std::string charLine;
 	std::vector<char> mapLine;
 	if (file.is_open())
@@ -44,7 +44,7 @@ void Level::createMap(std::map<char, sf::Texture*> groundTextures)
 		for (int j = 0; j < Arrangement[i].size(); j++)
 		{
 			
-				if (Arrangement[i][j] != 'O')
+				if (Arrangement[i][j] != '0')
 				{
 					chunk.setTexture(*groundTextures[Arrangement[i][j]]);
 					chunk.setScale(1.0f, 1.0f);
