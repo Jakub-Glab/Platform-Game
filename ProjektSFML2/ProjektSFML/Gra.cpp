@@ -119,6 +119,146 @@ bool Gra::Run()
 {
 	return window->isOpen();
 }
+void Gra::wygrana(float&zycie)
+{
+	sf::RenderWindow window2(sf::VideoMode(800, 400), "Wygrana");
+	sf::Texture texture3;
+	texture3.loadFromFile("Textures/tlo_wygrana.png");
+	sf::Sprite sprite3;
+	sprite3.setTexture(texture3);
+	sprite3.setPosition(0, 0);
+	sf::Image icon;
+	icon.loadFromFile("Textures/ikona_gra.png");
+	window2.setIcon(64, 64, icon.getPixelsPtr());
+	sf::Event evnt;
+	sf::Font font2;
+	if (!font2.loadFromFile("Fonts/font.ttf")) { std::cout << "Blad z zaladowaniem czcionki!!"; }
+
+	while (window2.isOpen())
+	{
+		while (window2.pollEvent(evnt)) {
+
+			switch (evnt.type) {
+
+			case sf::Event::Closed:
+				window2.close();
+				break;
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
+			window2.close();
+		}
+		
+		
+		window2.clear();
+		window2.draw(sprite3);
+	if (zycie == 4) 
+	{ 
+		sf::Text Koniec("Bdb",font2);
+		Koniec.setFillColor(sf::Color::Green); 
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec); 
+	}
+	if (zycie == 3.75) {
+		sf::Text Koniec("Bdb -", font2);
+		Koniec.setFillColor(sf::Color::Green);
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec);
+	}
+	if (zycie == 3.5) { 
+		sf::Text Koniec("Db +", font2);
+		Koniec.setFillColor(sf::Color::Green);
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec);
+	}
+	if (zycie == 3.25) { 
+		sf::Text Koniec("Db ", font2);
+		Koniec.setFillColor(sf::Color::Green);
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec);
+	}
+	if (zycie == 3) {
+		sf::Text Koniec("Db ", font2);
+		Koniec.setFillColor(sf::Color::Green);
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec);
+	}
+	if (zycie == 2.75) {
+		sf::Text Koniec("Db -", font2);
+		Koniec.setFillColor(sf::Color::Yellow);
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec);
+	}
+	if (zycie == 2.5) {
+		sf::Text Koniec("Dst +", font2);
+		Koniec.setFillColor(sf::Color::Yellow);
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec);
+	}
+	if (zycie == 2.25) {
+		sf::Text Koniec("Dst ", font2);
+		Koniec.setFillColor(sf::Color::Yellow);
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec);
+	}
+	if (zycie == 2) {
+		sf::Text Koniec("Dst ", font2);
+		Koniec.setFillColor(sf::Color::Yellow);
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec);
+	}
+	if (zycie == 1.75) {
+		sf::Text Koniec("Dst -", font2);
+		Koniec.setFillColor(sf::Color::Yellow);
+		Koniec.setCharacterSize(35);
+		Koniec.setPosition(400, 135);
+		window2.draw(Koniec);
+	}
+		window2.display();
+	}
+}
+void Gra::przegrana()
+{
+	sf::RenderWindow window2(sf::VideoMode(800, 400), "Przegrana");
+	sf::Texture texture3;
+	texture3.loadFromFile("Textures/tlo_przegrana.png");
+	sf::Sprite sprite3;
+	sprite3.setTexture(texture3);
+	sprite3.setPosition(0, 0);
+	sf::Image icon;
+	icon.loadFromFile("Textures/ikona_gra.png");
+	window2.setIcon(64, 64, icon.getPixelsPtr());
+	sf::Event evnt;
+	while (window2.isOpen())
+	{
+		while (window2.pollEvent(evnt)) {
+
+			switch (evnt.type) {
+
+			case sf::Event::Closed:
+				window2.close();
+				break;
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
+			window2.close();
+		}
+		window2.clear();
+		window2.draw(sprite3);
+		window2.display();
+	}
+}
 void Gra::wysZycie()
 {
 	if (zycie > 4) { zycie = 4; }
@@ -129,40 +269,36 @@ void Gra::wysZycie()
 	if (zycie == 3) { ssOceny << " Db "; Oceny.setFillColor(sf::Color::Green); }
 	if (zycie == 2.75) { ssOceny << " Db - "; Oceny.setFillColor(sf::Color::Yellow); }
 	if (zycie == 2.5) { ssOceny << " Dst + "; Oceny.setFillColor(sf::Color::Yellow); }
-	if (zycie == 2.25) { ssOceny << " Dst + "; Oceny.setFillColor(sf::Color::Yellow); }
+	if (zycie == 2.25) { ssOceny << " Dst "; Oceny.setFillColor(sf::Color::Yellow); }
 	if (zycie == 2) { ssOceny << " Dst "; Oceny.setFillColor(sf::Color::Yellow); }
 	if (zycie == 1.75) { ssOceny << " Dst - "; Oceny.setFillColor(sf::Color::Yellow); }
 	if (zycie == 1.5)
 	{
 		ssOceny << " ndst ";
 		Oceny.setFillColor(sf::Color::Red);
-		ssEnd << "PRZEGRALES GRE";
-		window->draw(Koniec);
-		Sleep(3000);
 		window->close();
+		przegrana();
 	}
 	if (zycie == 1)
 	{
 		ssOceny << " ndst ";
 		Oceny.setFillColor(sf::Color::Red);
-		ssEnd << "PRZEGRALES GRE";
-		window->draw(Koniec);
-		Sleep(3000);
 		window->close();
+		przegrana();
 	}
 	if (zycie == 0.75)
 	{
 		ssOceny << " ndst ";
 		Oceny.setFillColor(sf::Color::Red);
-		ssEnd << "PRZEGRALES GRE";
-		window->draw(Koniec);
-		Sleep(3000);
 		window->close();
+		przegrana();
 	}
+	
 }
 void Gra::wysPunkty()
 {
 	if (score == 0) ssScore << "Punkty ECTS: " <<score;
+
 }
 void Gra::Update()
 {
@@ -332,12 +468,6 @@ void Gra::Licznik()
 	Oceny.setFont(font);
 	Oceny.setString(ssOceny.str());
 	Oceny.setPosition(view->getCenter().x - 540, view->getCenter().y - 320);
-
-	Koniec.setCharacterSize(35);
-	Koniec.setFillColor(sf::Color::Red);
-	Koniec.setFont(font);
-	Koniec.setString(ssEnd.str());
-	Koniec.setPosition(view->getCenter().x - 512, view->getCenter().y - 240);
 
 	window->draw(Oceny);
 	window->draw(Score);
@@ -514,10 +644,6 @@ void Gra::CombatCollision(sf::Vector2f& direction, float p)
 				this->player->OnCollision(direction);
 				this->wrog->OnCollision(direction);
 			}
-		
-
-	
-
 }
 void Gra::EnemyCollision(sf::Vector2f& direction, float p)
 {
@@ -775,7 +901,6 @@ void Gra::CoinCollision(sf::Vector2f& direction, float p)
 	float intersectX;
 	float intersectY;
 
-
 	for (size_t i = 0; i < this->coin->MatrixCoin.size(); i++)
 	{
 		for (size_t j = 0; j < this->coin->MatrixCoin[i].size(); j++)
@@ -804,17 +929,11 @@ void Gra::CoinCollision(sf::Vector2f& direction, float p)
 					{
 						this->coin->MatrixCoin[i][j].move(intersectX * (1.0f - p), 0.0f);
 						this->player->body.move(-intersectX * p, 0.0f);
-
-						direction.x = 1.0f;
-						direction.y = 0.0f;
 					}
 					else
 					{
 						this->coin->MatrixCoin[i][j].move(-intersectX * (1.0f - p), 0.0f);
 						this->player->body.move(intersectX * p, 0.0f);
-
-						direction.x = -1.0f;
-						direction.y = 0.0f;
 					}
 				}
 				else
@@ -823,20 +942,14 @@ void Gra::CoinCollision(sf::Vector2f& direction, float p)
 					{
 						this->coin->MatrixCoin[i][j].move(0.0f, intersectY * (1.0f - p));
 						this->player->body.move(0.0f, -intersectY * p);
-
-						direction.x = 0.0f;
-						direction.y = 1.0f;
 					}
 					else
 					{
 						this->coin->MatrixCoin[i][j].move(0.0f, -intersectY * (1.0f - p));
 						this->player->body.move(0.0f, intersectY * p);
-
-						direction.x = 0.0f;
-						direction.y = -1.0f;
 					}
 				}
-				//return true;
+
 				t = true;
 
 			}
@@ -851,6 +964,12 @@ void Gra::CoinCollision(sf::Vector2f& direction, float p)
 				Score.setString(ssScore.str());
 				coin->MatrixCoin[i].erase(coin->MatrixCoin[i].begin() + j, coin->MatrixCoin[i].begin() + j + 1);
 				sound1.play();
+				if (score == 3)
+				{
+					window->close();
+					wygrana(zycie);
+					
+				}
 
 			}
 		}

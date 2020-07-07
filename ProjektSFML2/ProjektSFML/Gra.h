@@ -59,7 +59,7 @@ public:
 	//Rzeczy do licznika punktów:
 	std::ostringstream ssScore;
 	std::ostringstream ssOceny;
-	std::ostringstream ssEnd;
+	
 	sf::Text Score;
 	sf::Font font;
 	sf::Time elapsed1 = clock2.getElapsedTime();
@@ -81,7 +81,7 @@ public:
 	sf::Clock clock3;
 	sf::Time elapsed3;
 	sf::Text Oceny;
-	sf::Text Koniec;
+	
 	sf::Color orange;
 
 	float zycie = 4;
@@ -94,6 +94,8 @@ public:
 	void loadData();
 	void Chmurki();
 	//void TworzCoin();
+	void wygrana(float& zycie);
+	void przegrana();
 	void Czas();
 	bool Run();
 	void Update();
