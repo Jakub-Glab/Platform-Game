@@ -3,7 +3,7 @@
 
 Gra::Gra()
 {
-	window = new sf::RenderWindow(sf::VideoMode(1024, 640), "POLIBUDA", sf::Style::Close | sf::Style::Resize);
+	window = new sf::RenderWindow(sf::VideoMode(1024, 640), "Gra SFML", sf::Style::Close | sf::Style::Resize);
 	loadData();
 	view = new sf::View(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
 	level = new Level(GroundTextures);
@@ -24,48 +24,28 @@ Gra::~Gra()
 	delete coin;
 	delete player;
 	delete view;
+	delete wrog;
 }
 void Gra::loadTextures()
 {
-	if (!playerTexture.loadFromFile("Textures/player_texture.png"))
-	{
-		std::cout << "Problem z zaladowaniem tekstury gracza";
-	}
-	if (!enemyTexture.loadFromFile("Textures/enemy_texture.png"))
-	{
-		std::cout << "Problem z zaladowaniem tekstury wroga";
-	}
-
-	if (!coinsound.loadFromFile("Sounds/coin.wav"))
-	{
-		std::cout << "Problem z zaladowaniem dzwieku nr. 1";
-	}
-	if (!jumpSound1.loadFromFile("Sounds/jump1.ogg"))
-	{
-		std::cout << "Problem z zaladowaniem dzwieku nr. 2";
-
-	}
-	if (!jumpSound2.loadFromFile("Sounds/jump2.ogg"))
-	{
-		std::cout << "Problem z zaladowaniem dzwieku nr. 3";
-	}
-	if (!damageSound.loadFromFile("/Soundsdamage.wav"))
-	{
-		std::cout << "Problem z zaladowaniem dzwieku nr. 4";
-
-	}
-
+	if (!playerTexture.loadFromFile("Textures/player_texture.png")) {	std::cout << "Problem z zaladowaniem tekstury gracza";}
+	if (!enemyTexture.loadFromFile("Textures/enemy_texture.png")) {	std::cout << "Problem z zaladowaniem tekstury wroga";}
+	if (!coinsound.loadFromFile("Sounds/coin.wav")) {	std::cout << "Problem z zaladowaniem dzwieku nr. 1";}
+	if (!jumpSound1.loadFromFile("Sounds/jump1.ogg")) {	std::cout << "Problem z zaladowaniem dzwieku nr. 2";}
+	if (!jumpSound2.loadFromFile("Sounds/jump2.ogg")) {std::cout << "Problem z zaladowaniem dzwieku nr. 3";}
+	if (!damageSound.loadFromFile("/Soundsdamage.wav")) {std::cout << "Problem z zaladowaniem dzwieku nr. 4";}
+	if (!tlo.loadFromFile("Textures/tlo4.jpg")); {std::cout << "Problem z zaladowaniem grafiki tla"; }
+	if (!font.loadFromFile("Fonts/font.ttf")) { std::cout << "Blad z zaladowaniem czcionki!!";}
+	if (!icon.loadFromFile("Textures/ikona_gra.png")) { std::cout << "Blad z zaladowaniem ikony!!"; }
 	/*if (!coinTexture.loadFromFile("CoinSheet.png"))
 	{
 		std::cout << "Problem z zaladowaniem tekstury coin";
 	}*/
-
 	sound1.setBuffer(coinsound);
 	jump_sound1.setBuffer(jumpSound1);
 	jump_sound2.setBuffer(jumpSound2);
 	damage.setBuffer(damageSound);
 
-	tlo.loadFromFile("Textures/tlo4.jpg");
 
 	grass = new sf::Texture;
 	grass->loadFromFile("Textures/grass.png");
@@ -115,10 +95,7 @@ void Gra::loadTextures()
 	coinT->loadFromFile("Textures/cointext.png");
 	CoinTextures['C'] = coinT;
 
-	if (!font.loadFromFile("Fonts/font.ttf"))
-	{
-		std::cout << "Blad z zaladowaniem czcionki!!" << std::endl;
-	}
+	
 	Oceny.setFillColor(sf::Color::Green);
 	
 }
@@ -146,10 +123,15 @@ void Gra::wysZycie()
 {
 	if (zycie > 4) { zycie = 4; }
 	if (zycie == 4) { ssOceny << " Bdb "; Oceny.setFillColor(sf::Color::Green); }
+	if (zycie == 3.75) { ssOceny << " Bdb - "; Oceny.setFillColor(sf::Color::Green); }
 	if (zycie == 3.5) { ssOceny << " Db + "; Oceny.setFillColor(sf::Color::Green); }
+	if (zycie == 3.25) { ssOceny << " Db "; Oceny.setFillColor(sf::Color::Green); }
 	if (zycie == 3) { ssOceny << " Db "; Oceny.setFillColor(sf::Color::Green); }
+	if (zycie == 2.75) { ssOceny << " Db - "; Oceny.setFillColor(sf::Color::Yellow); }
 	if (zycie == 2.5) { ssOceny << " Dst + "; Oceny.setFillColor(sf::Color::Yellow); }
+	if (zycie == 2.25) { ssOceny << " Dst + "; Oceny.setFillColor(sf::Color::Yellow); }
 	if (zycie == 2) { ssOceny << " Dst "; Oceny.setFillColor(sf::Color::Yellow); }
+	if (zycie == 1.75) { ssOceny << " Dst - "; Oceny.setFillColor(sf::Color::Yellow); }
 	if (zycie == 1.5)
 	{
 		ssOceny << " ndst ";
@@ -160,6 +142,15 @@ void Gra::wysZycie()
 		window->close();
 	}
 	if (zycie == 1)
+	{
+		ssOceny << " ndst ";
+		Oceny.setFillColor(sf::Color::Red);
+		ssEnd << "PRZEGRALES GRE";
+		window->draw(Koniec);
+		Sleep(3000);
+		window->close();
+	}
+	if (zycie == 0.75)
 	{
 		ssOceny << " ndst ";
 		Oceny.setFillColor(sf::Color::Red);
@@ -260,7 +251,7 @@ void Gra::Render()
 	window->setView(*view);
 	Tlo.setPosition(view->getCenter().x - 512, view->getCenter().y - 320);
 
-	
+	window->setIcon(64, 64, icon.getPixelsPtr());
 
 	for (size_t i = 0; i < alien.size(); i++)
 	{
@@ -506,7 +497,7 @@ void Gra::CombatCollision(sf::Vector2f& direction, float p)
 						direction.x = 0.0f;
 						direction.y = -1.0f;
 						damage.play();
-						zycie += 0.5;
+						zycie += 0.25;
 						ssOceny.str("");
 						wysZycie();
 					}

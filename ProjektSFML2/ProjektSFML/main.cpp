@@ -2,14 +2,49 @@
 #include "Gra.h"
 #include "Chmurki.h"
 #include "Menu.h"
-#include "Sterowanie.h"
+void sterowanie()
+{
+	sf::RenderWindow window(sf::VideoMode(800, 800), "Sterowanie");
+	sf::Texture texture3;
+	texture3.loadFromFile("Textures/tlo_sterowanie.png");
+	sf::Sprite sprite3;
+	sprite3.setTexture(texture3);
+	sprite3.setPosition(0, 0);
+	sf::Image icon;
+	icon.loadFromFile("Textures/ikona_gra.png");
+	window.setIcon(64, 64, icon.getPixelsPtr());
+	sf::Event evnt;
+	while (window.isOpen())
+	{
+		while (window.pollEvent(evnt)) {
 
+			switch (evnt.type) {
+
+			case sf::Event::Closed:
+				window.close();
+				break;
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
+			window.close();
+		}
+		window.clear();
+		window.draw(sprite3);
+		window.display();
+	}
+}
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Gra MENU");
 	sf::Clock clock;
 	sf::Time elapsed;
 	srand(time(NULL));
+
+	sf::Image icon;
+	icon.loadFromFile("Textures/ikona_gra.png");
+	window.setIcon(64, 64, icon.getPixelsPtr());
+
 
 	Menu menu(window.getSize().x, window.getSize().y);
 	sf::Texture texture;
@@ -106,13 +141,7 @@ int main()
 						break;
 					case 1:
 					{
-						Sterowanie* gra = new Sterowanie;
-						while (gra->Run())
-						{
-							gra->Update();
-							gra->Render();
-						}
-
+						sterowanie();
 					}
 						break;
 					case 2:

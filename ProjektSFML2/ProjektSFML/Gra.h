@@ -25,6 +25,7 @@ public:
 	Enemies* wrog;
 	Coin* coin;
 	sf::RenderWindow* window;
+	sf::Image icon;
 	sf::View* view;
 	Level* level;
 	STLevel* ST_level;
@@ -76,11 +77,12 @@ public:
 	sf::Sound jump_sound1;
 	sf::Sound jump_sound2;
 	std::vector<std::unique_ptr<RuchomySprite>> alien;
-	//std::vector<std::unique_ptr<Enemies>> wrog;
+	std::vector<std::unique_ptr<Enemies>> przeciwnik;
 	sf::Clock clock3;
 	sf::Time elapsed3;
 	sf::Text Oceny;
 	sf::Text Koniec;
+	sf::Color orange;
 
 	float zycie = 4;
 

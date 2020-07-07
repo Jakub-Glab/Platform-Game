@@ -62,7 +62,7 @@ void Enemies::Update(float deltaTime)
 
 void Enemies::Draw(sf::RenderWindow& window)
 {
-	window.draw(body);               //<--------- tutaj wywala wyjatek przy usuwaniu.
+	window.draw(body);
 }
 
 void Enemies::OnCollision(sf::Vector2f direction)
