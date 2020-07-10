@@ -15,6 +15,9 @@
 #include "STBlock.h"
 #include <conio.h>
 #include <Windows.h>
+#include "Wrogowie.h"
+#include <fstream>
+
 
 class Gra
 {
@@ -43,6 +46,7 @@ public:
 	//Tekstury:
 	sf::Texture playerTexture;
 	sf::Texture enemyTexture;
+	sf::Texture enemyTexture2;
 	// old coin:  sf::Texture coinTexture;
 	Collider col = player->GetCollider();
 	sf::Texture tlo;
@@ -77,11 +81,11 @@ public:
 	sf::Sound jump_sound1;
 	sf::Sound jump_sound2;
 	std::vector<std::unique_ptr<RuchomySprite>> alien;
-	std::vector<std::unique_ptr<Enemies>> przeciwnik;
+	std::vector<std::unique_ptr<Enemies2>> przeciwnik;
 	sf::Clock clock3;
 	sf::Time elapsed3;
 	sf::Text Oceny;
-	
+	std::vector<std::vector<char>> EnemiesLocation;
 	sf::Color orange;
 
 	float zycie = 4;
@@ -101,12 +105,16 @@ public:
 	void Update();
 	void Render();
 	void Licznik();
+	void EnemiesLoad();
 	void PlayerCollision(sf::Vector2f& direction, float p);
 	void EnemyCollision(sf::Vector2f& direction, float p);
 	void PlayerCollisionST(sf::Vector2f& direction, float p);
 	void CombatCollision(sf::Vector2f& direction, float p);
+	void CombatCollision2(sf::Vector2f& direction, float p);
 	void EnemyCollisionST(sf::Vector2f& direction, float p);
 	void CoinCollision(sf::Vector2f& direction, float p);
+	void WrogowieCollision(sf::Vector2f& direction, float p);
+	void WrogowieCollisionST(sf::Vector2f& direction, float p);
 	//bool isCollidingWithCoin(std::vector<Coin*> &coinVec);
 
 

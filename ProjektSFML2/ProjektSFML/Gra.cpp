@@ -13,7 +13,11 @@ Gra::Gra()
 	coin = new Coin(CoinTextures);
 	ST_level = new STLevel(ST_textures);
 	wrog = new Enemies(&enemyTexture, sf::Vector2u(3, 8), 0.075f, 150.0f, 320.0f);
-
+	for (int i = 0; i < 4; i++)
+	{
+		przeciwnik.emplace_back(std::make_unique<Enemies2>(&enemyTexture2, sf::Vector2u(3, 8), 0.075f, 150.0f, 320.0f));
+	}
+	EnemiesLoad();
 }
 Gra::~Gra()
 {
@@ -28,14 +32,15 @@ Gra::~Gra()
 }
 void Gra::loadTextures()
 {
-	if (!playerTexture.loadFromFile("Textures/player_texture.png")) {	std::cout << "Problem z zaladowaniem tekstury gracza";}
-	if (!enemyTexture.loadFromFile("Textures/enemy_texture.png")) {	std::cout << "Problem z zaladowaniem tekstury wroga";}
-	if (!coinsound.loadFromFile("Sounds/coin.wav")) {	std::cout << "Problem z zaladowaniem dzwieku nr. 1";}
-	if (!jumpSound1.loadFromFile("Sounds/jump1.ogg")) {	std::cout << "Problem z zaladowaniem dzwieku nr. 2";}
-	if (!jumpSound2.loadFromFile("Sounds/jump2.ogg")) {std::cout << "Problem z zaladowaniem dzwieku nr. 3";}
-	if (!damageSound.loadFromFile("/Soundsdamage.wav")) {std::cout << "Problem z zaladowaniem dzwieku nr. 4";}
+	if (!playerTexture.loadFromFile("Textures/player_texture.png")) { std::cout << "Problem z zaladowaniem tekstury gracza"; }
+	if (!enemyTexture.loadFromFile("Textures/enemy_texture.png")) { std::cout << "Problem z zaladowaniem tekstury wroga"; }
+	if (!enemyTexture2.loadFromFile("Textures/enemy_texture.png")) { std::cout << "Problem z zaladowaniem tekstury wroga"; }
+	if (!coinsound.loadFromFile("Sounds/coin.wav")) { std::cout << "Problem z zaladowaniem dzwieku nr. 1"; }
+	if (!jumpSound1.loadFromFile("Sounds/jump1.ogg")) { std::cout << "Problem z zaladowaniem dzwieku nr. 2"; }
+	if (!jumpSound2.loadFromFile("Sounds/jump2.ogg")) { std::cout << "Problem z zaladowaniem dzwieku nr. 3"; }
+	if (!damageSound.loadFromFile("/Soundsdamage.wav")) { std::cout << "Problem z zaladowaniem dzwieku nr. 4"; }
 	if (!tlo.loadFromFile("Textures/tlo4.jpg")); {std::cout << "Problem z zaladowaniem grafiki tla"; }
-	if (!font.loadFromFile("Fonts/font.ttf")) { std::cout << "Blad z zaladowaniem czcionki!!";}
+	if (!font.loadFromFile("Fonts/font.ttf")) { std::cout << "Blad z zaladowaniem czcionki!!"; }
 	if (!icon.loadFromFile("Textures/ikona_gra.png")) { std::cout << "Blad z zaladowaniem ikony!!"; }
 	/*if (!coinTexture.loadFromFile("CoinSheet.png"))
 	{
@@ -95,9 +100,9 @@ void Gra::loadTextures()
 	coinT->loadFromFile("Textures/cointext.png");
 	CoinTextures['C'] = coinT;
 
-	
+
 	Oceny.setFillColor(sf::Color::Green);
-	
+
 }
 void Gra::loadData()
 {
@@ -107,6 +112,7 @@ void Gra::loadData()
 	Czas();
 	wysPunkty();
 	wysZycie();
+
 }
 void Gra::Czas()
 {
@@ -119,7 +125,7 @@ bool Gra::Run()
 {
 	return window->isOpen();
 }
-void Gra::wygrana(float&zycie)
+void Gra::wygrana(float& zycie)
 {
 	sf::RenderWindow window2(sf::VideoMode(800, 400), "Wygrana");
 	sf::Texture texture3;
@@ -149,81 +155,81 @@ void Gra::wygrana(float&zycie)
 		{
 			window2.close();
 		}
-		
-		
+
+
 		window2.clear();
 		window2.draw(sprite3);
-	if (zycie == 4) 
-	{ 
-		sf::Text Koniec("Bdb",font2);
-		Koniec.setFillColor(sf::Color::Green); 
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec); 
-	}
-	if (zycie == 3.75) {
-		sf::Text Koniec("Bdb -", font2);
-		Koniec.setFillColor(sf::Color::Green);
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec);
-	}
-	if (zycie == 3.5) { 
-		sf::Text Koniec("Db +", font2);
-		Koniec.setFillColor(sf::Color::Green);
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec);
-	}
-	if (zycie == 3.25) { 
-		sf::Text Koniec("Db ", font2);
-		Koniec.setFillColor(sf::Color::Green);
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec);
-	}
-	if (zycie == 3) {
-		sf::Text Koniec("Db ", font2);
-		Koniec.setFillColor(sf::Color::Green);
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec);
-	}
-	if (zycie == 2.75) {
-		sf::Text Koniec("Db -", font2);
-		Koniec.setFillColor(sf::Color::Yellow);
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec);
-	}
-	if (zycie == 2.5) {
-		sf::Text Koniec("Dst +", font2);
-		Koniec.setFillColor(sf::Color::Yellow);
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec);
-	}
-	if (zycie == 2.25) {
-		sf::Text Koniec("Dst ", font2);
-		Koniec.setFillColor(sf::Color::Yellow);
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec);
-	}
-	if (zycie == 2) {
-		sf::Text Koniec("Dst ", font2);
-		Koniec.setFillColor(sf::Color::Yellow);
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec);
-	}
-	if (zycie == 1.75) {
-		sf::Text Koniec("Dst -", font2);
-		Koniec.setFillColor(sf::Color::Yellow);
-		Koniec.setCharacterSize(35);
-		Koniec.setPosition(400, 135);
-		window2.draw(Koniec);
-	}
+		if (zycie == 4)
+		{
+			sf::Text Koniec("Bdb", font2);
+			Koniec.setFillColor(sf::Color::Green);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
+		if (zycie == 3.75) {
+			sf::Text Koniec("Bdb -", font2);
+			Koniec.setFillColor(sf::Color::Green);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
+		if (zycie == 3.5) {
+			sf::Text Koniec("Db +", font2);
+			Koniec.setFillColor(sf::Color::Green);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
+		if (zycie == 3.25) {
+			sf::Text Koniec("Db ", font2);
+			Koniec.setFillColor(sf::Color::Green);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
+		if (zycie == 3) {
+			sf::Text Koniec("Db ", font2);
+			Koniec.setFillColor(sf::Color::Green);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
+		if (zycie == 2.75) {
+			sf::Text Koniec("Db -", font2);
+			Koniec.setFillColor(sf::Color::Yellow);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
+		if (zycie == 2.5) {
+			sf::Text Koniec("Dst +", font2);
+			Koniec.setFillColor(sf::Color::Yellow);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
+		if (zycie == 2.25) {
+			sf::Text Koniec("Dst ", font2);
+			Koniec.setFillColor(sf::Color::Yellow);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
+		if (zycie == 2) {
+			sf::Text Koniec("Dst ", font2);
+			Koniec.setFillColor(sf::Color::Yellow);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
+		if (zycie == 1.75) {
+			sf::Text Koniec("Dst -", font2);
+			Koniec.setFillColor(sf::Color::Yellow);
+			Koniec.setCharacterSize(35);
+			Koniec.setPosition(400, 135);
+			window2.draw(Koniec);
+		}
 		window2.display();
 	}
 }
@@ -293,11 +299,11 @@ void Gra::wysZycie()
 		window->close();
 		przegrana();
 	}
-	
+
 }
 void Gra::wysPunkty()
 {
-	if (score == 0) ssScore << "Punkty ECTS: " <<score;
+	if (score == 0) ssScore << "Punkty ECTS: " << score;
 
 }
 void Gra::Update()
@@ -343,12 +349,19 @@ void Gra::Update()
 	// old coin:  coin1->Update(deltaTime);
 	player->Update(deltaTime);
 	wrog->Update(deltaTime);
+	for (size_t i = 0; i < przeciwnik.size(); i++)
+	{
+		przeciwnik[i]->Update(deltaTime);
+	}
 	PlayerCollision(direction, 1.0f);
 	EnemyCollision(direction, 1.0f);
 	PlayerCollisionST(direction2, 1.0f);
 	EnemyCollisionST(direction2, 1.0f);
+	WrogowieCollisionST(direction2, 1.0f);
+	WrogowieCollision(direction2, 1.0f);
 	CoinCollision(direction3, 1.0f);
 	CombatCollision(direction, 1.0f);
+	CombatCollision2(direction, 1.0f);
 }
 /*void Gra::TworzCoin()
 {
@@ -362,23 +375,24 @@ void Gra::Chmurki()
 		alien.emplace_back(std::make_unique<Duch>("Textures/chmurka.png"));
 		float pleaceX;
 		float pleaceY;
-	
+
 
 		for (size_t i = 0; i < alien.size(); i++)
 		{
-			
-				pleaceX = rand() % 2400;
-				pleaceY = rand() % 240 - 450;
-			
+
+			pleaceX = rand() % 2400;
+			pleaceY = rand() % 240 - 450;
+
 			alien[i]->setPosition(pleaceX, pleaceY);
 		}
+
 
 
 	}
 }
 void Gra::Render()
 {
-	
+
 
 	Tlo.setTexture(tlo);
 	view->setCenter(player->GetPosition());
@@ -393,9 +407,13 @@ void Gra::Render()
 	{
 		window->draw(*alien[i]);
 	}
+	for (size_t i = 0; i < przeciwnik.size(); i++)
+	{
+		przeciwnik[i]->Draw(*window);
+	}
 	player->Draw(*window);
 	wrog->Draw(*window);
-	
+
 	for (int i = 0; i < ST_level->MatrixST.size(); i++)
 	{
 		for (int j = 0; j < ST_level->MatrixST[i].size(); j++)
@@ -417,13 +435,47 @@ void Gra::Render()
 			window->draw(coin->MatrixCoin[i][j]);
 		}
 	}
-	
+
 
 	// old coin:  coin->Draw(*window);
 	// old coin:  coin1->Draw(*window);
 	Licznik();
-	
+
 	window->display();
+}
+void Gra::EnemiesLoad()
+{
+	std::ifstream file("Maps/mapaEnemies.txt");
+	std::string charLine;
+	std::vector<char> mapLine;
+	if (file.is_open())
+	{
+		while (file.good())
+		{
+			getline(file, charLine);
+			for (int i = 0; i < charLine.length(); i++)
+			{
+				mapLine.push_back(charLine[i]);
+			}
+			EnemiesLocation.push_back(mapLine);
+			mapLine.clear();
+			charLine.clear();
+		}
+	}
+	for (size_t x = 0; x < przeciwnik.size(); x++)
+	{
+		for (int i = 0; i < EnemiesLocation.size(); i++)
+		{
+			for (int j = 0; j < EnemiesLocation[i].size(); j++)
+			{
+				if (EnemiesLocation[i][j] == 'E')
+				{
+					przeciwnik[x]->body.setPosition(float(j * 64), float(i * 64));
+				}
+			}
+
+		}
+	}
 }
 /*bool Gra::isCollidingWithCoin(std::vector<Coin*>& coinVec)
 {
@@ -437,7 +489,7 @@ void Gra::Render()
 }*/
 void Gra::Licznik()
 {
-	
+
 	/*
 	licznik.setCharacterSize(35);
 	licznik.setFillColor(sf::Color::Red);
@@ -445,8 +497,8 @@ void Gra::Licznik()
 	licznik.setString(Zegar.str());
 	licznik.setPosition(view->getCenter().x - 512, view->getCenter().y - 180);
 	*/
-	
-	/* old coin:  
+
+	/* old coin:
 	for (int i = 0; i < coinVec.size(); i++) {
 		if (isCollidingWithCoin(coinVec)) {
 			coinVec.erase(coinVec.begin() + i);
@@ -472,7 +524,7 @@ void Gra::Licznik()
 	window->draw(Oceny);
 	window->draw(Score);
 	window->draw(licznik);
-	
+
 
 }
 void Gra::PlayerCollision(sf::Vector2f& direction, float p)
@@ -564,86 +616,86 @@ void Gra::CombatCollision(sf::Vector2f& direction, float p)
 	float intersectX;
 	float intersectY;
 
-	
-			sf::Vector2f thisposition = this->wrog->GetPosition();
-			sf::Vector2f otherposition = this->player->GetPosition();
-			sf::Vector2f thishalfsize = this->wrog->body.getSize() / 2.0f;
-			sf::Vector2f otherhalfsize = this->player->body.getSize() / 2.0f;
 
-			bool t;
+	sf::Vector2f thisposition = this->wrog->GetPosition();
+	sf::Vector2f otherposition = this->player->GetPosition();
+	sf::Vector2f thishalfsize = this->wrog->body.getSize() / 2.0f;
+	sf::Vector2f otherhalfsize = this->player->body.getSize() / 2.0f;
 
-			deltax = otherposition.x - thisposition.x;
-			deltay = otherposition.y - thisposition.y;
+	bool t;
 
-			intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
-			intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
+	deltax = otherposition.x - thisposition.x;
+	deltay = otherposition.y - thisposition.y;
 
-			if (intersectX < 0.0f && intersectY < 0.0f)
+	intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
+	intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
+
+	if (intersectX < 0.0f && intersectY < 0.0f)
+	{
+		p = std::min(std::max(p, 0.0f), 1.0f);
+
+		if (intersectX > intersectY)
+		{
+			if (deltax > 0.0f)
 			{
-				p = std::min(std::max(p, 0.0f), 1.0f);
+				this->wrog->body.move(intersectX * (1.0f - p), 0.0f);
+				this->player->body.move(-intersectX * p, 0.0f);
 
-				if (intersectX > intersectY)
-				{
-					if (deltax > 0.0f)
-					{
-						this->wrog->body.move(intersectX * (1.0f - p), 0.0f);
-						this->player->body.move(-intersectX * p, 0.0f);
-						
-						player->body.setPosition(256, 1152);
-						direction.x = 1.0f;
-						direction.y = 0.0f;
-						damage.play();
-						zycie--;
-						ssOceny.str("");
-						wysZycie();
-					}
-					else
-					{
-						this->wrog->body.move(-intersectX * (1.0f - p), 0.0f);
-						this->player->body.move(intersectX * p, 0.0f);
-						player->body.setPosition(256, 1152);
-						direction.x = -1.0f;
-						direction.y = 0.0f;
-						damage.play();
-						zycie--;
-						ssOceny.str("");
-						wysZycie();
-					}
-				}
-				else
-				{
-					if (deltay > 0.0f)
-					{
-						this->wrog->body.move(0.0f, intersectY * (1.0f - p));
-						this->player->body.move(0.0f, -intersectY * p);
-						direction.x = 0.0f;
-						direction.y = 1.0f;
-					}
-					else
-					{
-						this->wrog->body.move(0.0f, -intersectY * (1.0f - p));
-						this->player->body.move(0.0f, intersectY * p);
-						wrog->body.setPosition(256, 1152);
-						direction.x = 0.0f;
-						direction.y = -1.0f;
-						damage.play();
-						zycie += 0.25;
-						ssOceny.str("");
-						wysZycie();
-					}
-				}
-
-				t = true;
-
+				player->body.setPosition(256, 1152);
+				direction.x = 1.0f;
+				direction.y = 0.0f;
+				damage.play();
+				zycie--;
+				ssOceny.str("");
+				wysZycie();
 			}
-			else {
-				t = false;
-			}
-			if (t == true)
+			else
 			{
-				this->player->OnCollision(direction);
-				this->wrog->OnCollision(direction);
+				this->wrog->body.move(-intersectX * (1.0f - p), 0.0f);
+				this->player->body.move(intersectX * p, 0.0f);
+				player->body.setPosition(256, 1152);
+				direction.x = -1.0f;
+				direction.y = 0.0f;
+				damage.play();
+				zycie--;
+				ssOceny.str("");
+				wysZycie();
 			}
+		}
+		else
+		{
+			if (deltay > 0.0f)
+			{
+				this->wrog->body.move(0.0f, intersectY * (1.0f - p));
+				this->player->body.move(0.0f, -intersectY * p);
+				direction.x = 0.0f;
+				direction.y = 1.0f;
+			}
+			else
+			{
+				this->wrog->body.move(0.0f, -intersectY * (1.0f - p));
+				this->player->body.move(0.0f, intersectY * p);
+				wrog->body.setPosition(256, 1152);
+				direction.x = 0.0f;
+				direction.y = -1.0f;
+				damage.play();
+				zycie += 0.25;
+				ssOceny.str("");
+				wysZycie();
+			}
+		}
+
+		t = true;
+
+	}
+	else {
+		t = false;
+	}
+	if (t == true)
+	{
+		this->player->OnCollision(direction);
+		this->wrog->OnCollision(direction);
+	}
 }
 void Gra::EnemyCollision(sf::Vector2f& direction, float p)
 {
@@ -729,7 +781,7 @@ void Gra::EnemyCollision(sf::Vector2f& direction, float p)
 }
 void Gra::PlayerCollisionST(sf::Vector2f& direction, float p)
 {
-	
+
 	float deltax;
 	float deltay;
 	float intersectX;
@@ -808,7 +860,7 @@ void Gra::PlayerCollisionST(sf::Vector2f& direction, float p)
 		}
 
 	}
-	
+
 }
 void Gra::EnemyCollisionST(sf::Vector2f& direction, float p)
 {
@@ -893,9 +945,271 @@ void Gra::EnemyCollisionST(sf::Vector2f& direction, float p)
 	}
 
 }
+void Gra::WrogowieCollisionST(sf::Vector2f& direction, float p)
+{
+
+	float deltax;
+	float deltay;
+	float intersectX;
+	float intersectY;
+	for (size_t x = 0; x < przeciwnik.size(); x++)
+	{
+
+		for (size_t i = 0; i < this->ST_level->MatrixST.size(); i++)
+		{
+			for (size_t j = 0; j < this->ST_level->MatrixST[i].size(); j++)
+			{
+				sf::Vector2f thisposition = this->ST_level->MatrixST[i][j].getPosition();
+				sf::Vector2f otherposition = this->przeciwnik[x]->GetPosition();
+				sf::Vector2f thishalfsize(this->ST_level->MatrixST[i][j].getGlobalBounds().width / 2.0f, (ST_level->MatrixST[i][j].getGlobalBounds().height - 11) / 2.0f);
+				sf::Vector2f otherhalfsize = this->przeciwnik[x]->body.getSize() / 2.0f;
+
+				bool t;
+
+				deltax = otherposition.x - thisposition.x;
+				deltay = otherposition.y - thisposition.y;
+
+				intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
+				intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
+
+				if (intersectX < 0.0f && intersectY < 0.0f)
+				{
+					p = std::min(std::max(p, 0.0f), 1.0f);
+
+					if (intersectX > intersectY)
+					{
+						if (deltax > 0.0f)
+						{
+							this->ST_level->MatrixST[i][j].move(intersectX * (1.0f - p), 0.0f);
+							this->przeciwnik[x]->body.move(-intersectX * p, 0.0f);
+							przeciwnik[x]->odbicieP();
+							direction.x = 1.0f;
+							direction.y = 0.0f;
+						}
+						else
+						{
+							this->ST_level->MatrixST[i][j].move(-intersectX * (1.0f - p), 0.0f);
+							this->przeciwnik[x]->body.move(intersectX * p, 0.0f);
+							przeciwnik[x]->odbicieL();
+							direction.x = -1.0f;
+							direction.y = 0.0f;
+						}
+					}
+					else
+					{
+						if (deltay > 0.0f)
+						{
+							this->ST_level->MatrixST[i][j].move(0.0f, intersectY * (1.0f - p));
+							this->przeciwnik[x]->body.move(0.0f, -intersectY * p);
+
+							direction.x = 0.0f;
+							direction.y = 1.0f;
+						}
+						else
+						{
+							this->ST_level->MatrixST[i][j].move(0.0f, -intersectY * (1.0f - p));
+							this->przeciwnik[x]->body.move(0.0f, intersectY * p);
+
+							direction.x = 0.0f;
+							direction.y = -1.0f;
+						}
+					}
+
+					t = true;
+
+				}
+				else {
+					t = false;
+				}
+				if (t == true)
+				{
+					this->przeciwnik[x]->OnCollision(direction);
+				}
+			}
+
+		}
+	}
+}
+void Gra::CombatCollision2(sf::Vector2f& direction, float p)
+{
+	float deltax;
+	float deltay;
+	float intersectX;
+	float intersectY;
+
+	for (size_t x = 0; x < przeciwnik.size(); x++)
+	{
+	sf::Vector2f thisposition = this->przeciwnik[x]->GetPosition();
+	sf::Vector2f otherposition = this->player->GetPosition();
+	sf::Vector2f thishalfsize = this->przeciwnik[x]->body.getSize() / 2.0f;
+	sf::Vector2f otherhalfsize = this->player->body.getSize() / 2.0f;
+
+	bool t;
+
+	deltax = otherposition.x - thisposition.x;
+	deltay = otherposition.y - thisposition.y;
+
+	intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
+	intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
+
+	if (intersectX < 0.0f && intersectY < 0.0f)
+	{
+		p = std::min(std::max(p, 0.0f), 1.0f);
+
+		if (intersectX > intersectY)
+		{
+			if (deltax > 0.0f)
+			{
+				this->przeciwnik[x]->body.move(intersectX * (1.0f - p), 0.0f);
+				this->player->body.move(-intersectX * p, 0.0f);
+
+				player->body.setPosition(256, 1152);
+				direction.x = 1.0f;
+				direction.y = 0.0f;
+				damage.play();
+				zycie--;
+				ssOceny.str("");
+				wysZycie();
+			}
+			else
+			{
+				this->przeciwnik[x]->body.move(-intersectX * (1.0f - p), 0.0f);
+				this->player->body.move(intersectX * p, 0.0f);
+				player->body.setPosition(256, 1152);
+				direction.x = -1.0f;
+				direction.y = 0.0f;
+				damage.play();
+				zycie--;
+				ssOceny.str("");
+				wysZycie();
+			}
+		}
+		else
+		{
+			if (deltay > 0.0f)
+			{
+				this->przeciwnik[x]->body.move(0.0f, intersectY * (1.0f - p));
+				this->player->body.move(0.0f, -intersectY * p);
+				direction.x = 0.0f;
+				direction.y = 1.0f;
+			}
+			else
+			{
+				this->przeciwnik[x]->body.move(0.0f, -intersectY * (1.0f - p));
+				this->player->body.move(0.0f, intersectY * p);
+				przeciwnik[x]->body.setPosition(256, 1152);
+				direction.x = 0.0f;
+				direction.y = -1.0f;
+				damage.play();
+				zycie += 0.25;
+				ssOceny.str("");
+				wysZycie();
+			}
+		}
+
+		t = true;
+
+	}
+	else {
+		t = false;
+	}
+	if (t == true)
+	{
+		this->player->OnCollision(direction);
+		this->przeciwnik[x]->OnCollision(direction);
+	}
+}
+}
+void Gra::WrogowieCollision(sf::Vector2f& direction, float p)
+{
+
+	float deltax;
+	float deltay;
+	float intersectX;
+	float intersectY;
+
+	for (size_t x = 0; x < przeciwnik.size(); x++)
+	{
+
+		for (size_t i = 0; i < this->level->Matrix.size(); i++)
+		{
+			for (size_t j = 0; j < this->level->Matrix[i].size(); j++)
+			{
+				sf::Vector2f thisposition = this->level->Matrix[i][j].getPosition();
+				sf::Vector2f otherposition = this->przeciwnik[x]->GetPosition();
+				sf::Vector2f thishalfsize(this->level->Matrix[i][j].getGlobalBounds().width / 2.0f, (level->Matrix[i][j].getGlobalBounds().height) / 2.0f);
+				sf::Vector2f otherhalfsize = this->przeciwnik[x]->body.getSize() / 2.0f;
+
+				bool t;
+
+				deltax = otherposition.x - thisposition.x;
+				deltay = otherposition.y - thisposition.y;
+
+				intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
+				intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
+
+				if (intersectX < 0.0f && intersectY < 0.0f)
+				{
+					p = std::min(std::max(p, 0.0f), 1.0f);
+
+					if (intersectX > intersectY)
+					{
+						if (deltax > 0.0f)
+						{
+							this->level->Matrix[i][j].move(intersectX * (1.0f - p), 0.0f);
+							this->przeciwnik[x]->body.move(-intersectX * p, 0.0f);
+							przeciwnik[x]->odbicieP();
+							direction.x = 1.0f;
+							direction.y = 0.0f;
+						}
+						else
+						{
+							this->level->Matrix[i][j].move(-intersectX * (1.0f - p), 0.0f);
+							this->przeciwnik[x]->body.move(intersectX * p, 0.0f);
+							przeciwnik[x]->odbicieL();
+							direction.x = -1.0f;
+							direction.y = 0.0f;
+						}
+					}
+					else
+					{
+						if (deltay > 0.0f)
+						{
+							this->level->Matrix[i][j].move(0.0f, intersectY * (1.0f - p));
+							this->przeciwnik[x]->body.move(0.0f, -intersectY * p);
+
+							direction.x = 0.0f;
+							direction.y = 1.0f;
+						}
+						else
+						{
+							this->level->Matrix[i][j].move(0.0f, -intersectY * (1.0f - p));
+							this->przeciwnik[x]->body.move(0.0f, intersectY * p);
+
+							direction.x = 0.0f;
+							direction.y = -1.0f;
+						}
+					}
+
+					t = true;
+
+				}
+				else {
+					t = false;
+				}
+				if (t == true)
+				{
+					this->przeciwnik[x]->OnCollision(direction);
+				}
+			}
+
+		}
+	}
+
+}
 void Gra::CoinCollision(sf::Vector2f& direction, float p)
 {
-	
+
 	float deltax;
 	float deltay;
 	float intersectX;
@@ -968,7 +1282,7 @@ void Gra::CoinCollision(sf::Vector2f& direction, float p)
 				{
 					window->close();
 					wygrana(zycie);
-					
+
 				}
 
 			}
