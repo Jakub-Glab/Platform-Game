@@ -38,7 +38,7 @@ void Gra::loadTextures()
 	if (!coinsound.loadFromFile("Sounds/coin.wav")) { std::cout << "Problem z zaladowaniem dzwieku nr. 1"; }
 	if (!jumpSound1.loadFromFile("Sounds/jump1.ogg")) { std::cout << "Problem z zaladowaniem dzwieku nr. 2"; }
 	if (!jumpSound2.loadFromFile("Sounds/jump2.ogg")) { std::cout << "Problem z zaladowaniem dzwieku nr. 3"; }
-	if (!damageSound.loadFromFile("/Soundsdamage.wav")) { std::cout << "Problem z zaladowaniem dzwieku nr. 4"; }
+	if (!damageSound.loadFromFile("Sounds/damage.wav")) { std::cout << "Problem z zaladowaniem dzwieku nr. 4"; }
 	if (!tlo.loadFromFile("Textures/tlo4.jpg")); {std::cout << "Problem z zaladowaniem grafiki tla"; }
 	if (!font.loadFromFile("Fonts/font.ttf")) { std::cout << "Blad z zaladowaniem czcionki!!"; }
 	if (!icon.loadFromFile("Textures/ikona_gra.png")) { std::cout << "Blad z zaladowaniem ikony!!"; }
