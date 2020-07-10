@@ -2,7 +2,7 @@
 
 
 
-Enemies2::Enemies2(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight) :
+Enemies2::Enemies2(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight, float posX, float posY) :
 	animation(texture, imageCount, switchTime)
 {
 	this->speed = speed;
@@ -12,7 +12,7 @@ Enemies2::Enemies2(sf::Texture* texture, sf::Vector2u imageCount, float switchTi
 	upkey = false;
 
 	body.setSize(sf::Vector2f(64.0f, 64.0f));
-	body.setPosition(256.0f, 1084.0f);
+	body.setPosition(posX, posY);
 	body.setTexture(texture);
 }
 
@@ -24,7 +24,7 @@ void Enemies2::Update(float deltaTime)
 {
 
 	velocity.y += 981.0f * deltaTime;
-	velocity.x = 0.0f;
+	velocity.x = speed;
 	if (velocity.x == 0.0f)
 	{
 		row = 0;

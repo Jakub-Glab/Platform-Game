@@ -25,9 +25,22 @@ void sterowanie()
 				break;
 			}
 		}
+		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		{
 			window.close();
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			window.clear();
+			texture3.loadFromFile("Textures/tlo_sterowanie2.jpg");
+			window.display();
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			window.clear();
+			texture3.loadFromFile("Textures/tlo_sterowanie.png");
+			window.display();
 		}
 		window.clear();
 		window.draw(sprite3);

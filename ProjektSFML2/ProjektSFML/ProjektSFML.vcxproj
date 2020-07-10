@@ -145,7 +145,7 @@
     <ClCompile Include="Animacje.cpp" />
     <ClCompile Include="CoinMap.cpp" />
     <ClCompile Include="ECTS.cpp" />
-    <ClCompile Include="Enemies.cpp" />
+    <ClCompile Include="Enemy_wall.cpp" />
     <ClCompile Include="Gra.cpp" />
     <ClCompile Include="Kolizje.cpp" />
     <ClCompile Include="Mapa.cpp" />
@@ -159,7 +159,7 @@
     <ClInclude Include="Animacje.h" />
     <ClInclude Include="Chmurki.h" />
     <ClInclude Include="CoinMap.h" />
-    <ClInclude Include="Enemies.h" />
+    <ClInclude Include="Enemy_wall.h" />
     <ClInclude Include="Gra.h" />
     <ClInclude Include="Kolizje.h" />
     <ClInclude Include="ECTS.h" />

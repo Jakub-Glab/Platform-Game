@@ -6,7 +6,6 @@
 #include <map>
 #include <sstream>
 #include "Player.h"
-#include "Enemies.h"
 #include "Kolizje.h"
 //#include "ECTS.h"
 #include "Mapa.h"
@@ -17,6 +16,7 @@
 #include <Windows.h>
 #include "Wrogowie.h"
 #include <fstream>
+#include "Enemy_wall.h"
 
 
 class Gra
@@ -25,12 +25,12 @@ public:
 	//Gracz:
 	Player* player;
 	//Coiny:
-	Enemies* wrog;
 	Coin* coin;
 	sf::RenderWindow* window;
 	sf::Image icon;
 	sf::View* view;
 	Level* level;
+	LevelE* levelE;
 	STLevel* ST_level;
 	sf::Event evnt;
 	sf::Clock clock;
@@ -38,6 +38,7 @@ public:
 	std::map<char, sf::Texture*> GroundTextures;
 	std::map<char, sf::Texture*> CoinTextures;
 	std::map<char, sf::Texture*> ST_textures;
+	std::map<char, sf::Texture*> GroundTexturesE;
 	float VIEW_HEIGHT = 640.0f;
 	sf::Vector2f direction;
 	sf::Vector2f direction2;
@@ -45,7 +46,6 @@ public:
 	float deltaTime = 0.0f;
 	//Tekstury:
 	sf::Texture playerTexture;
-	sf::Texture enemyTexture;
 	sf::Texture enemyTexture2;
 	// old coin:  sf::Texture coinTexture;
 	Collider col = player->GetCollider();
@@ -58,6 +58,7 @@ public:
 	sf::Texture* box = new sf::Texture;
 	sf::Texture* stone = new sf::Texture;
 	sf::Texture* coinT = new sf::Texture;
+	sf::Texture* e_wall = new sf::Texture;
 	//Wektor coinów:
 	std::vector<Coin*> coinVec;
 	//Rzeczy do licznika punktów:
@@ -98,7 +99,7 @@ public:
 	void loadData();
 	void Chmurki();
 	//void TworzCoin();
-	void wygrana(float& zycie);
+	void wygrana();
 	void przegrana();
 	void Czas();
 	bool Run();
@@ -107,14 +108,15 @@ public:
 	void Licznik();
 	void EnemiesLoad();
 	void PlayerCollision(sf::Vector2f& direction, float p);
-	void EnemyCollision(sf::Vector2f& direction, float p);
+	
 	void PlayerCollisionST(sf::Vector2f& direction, float p);
-	void CombatCollision(sf::Vector2f& direction, float p);
+	
 	void CombatCollision2(sf::Vector2f& direction, float p);
-	void EnemyCollisionST(sf::Vector2f& direction, float p);
+	
 	void CoinCollision(sf::Vector2f& direction, float p);
 	void WrogowieCollision(sf::Vector2f& direction, float p);
 	void WrogowieCollisionST(sf::Vector2f& direction, float p);
+	void enemyWall(sf::Vector2f& direction, float p);
 	//bool isCollidingWithCoin(std::vector<Coin*> &coinVec);
 
 

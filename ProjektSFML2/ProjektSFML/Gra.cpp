@@ -7,16 +7,10 @@ Gra::Gra()
 	loadData();
 	view = new sf::View(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
 	level = new Level(GroundTextures);
+	levelE = new LevelE(GroundTexturesE);
 	player = new Player(&playerTexture, sf::Vector2u(3, 8), 0.1f, 200.0f, 320.0f);
-	// old coin:  coin = new Coin(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(420, 210));
-	// old coin:  coin1 = new Coin(&coinTexture, sf::Vector2u(1, 7), 0.2f, sf::Vector2f(300, 210));
 	coin = new Coin(CoinTextures);
 	ST_level = new STLevel(ST_textures);
-	wrog = new Enemies(&enemyTexture, sf::Vector2u(3, 8), 0.075f, 150.0f, 320.0f);
-	for (int i = 0; i < 4; i++)
-	{
-		przeciwnik.emplace_back(std::make_unique<Enemies2>(&enemyTexture2, sf::Vector2u(3, 8), 0.075f, 150.0f, 320.0f));
-	}
 	EnemiesLoad();
 }
 Gra::~Gra()
@@ -28,12 +22,11 @@ Gra::~Gra()
 	delete coin;
 	delete player;
 	delete view;
-	delete wrog;
+	delete coinT;
 }
 void Gra::loadTextures()
 {
 	if (!playerTexture.loadFromFile("Textures/player_texture.png")) { std::cout << "Problem z zaladowaniem tekstury gracza"; }
-	if (!enemyTexture.loadFromFile("Textures/enemy_texture.png")) { std::cout << "Problem z zaladowaniem tekstury wroga"; }
 	if (!enemyTexture2.loadFromFile("Textures/enemy_texture.png")) { std::cout << "Problem z zaladowaniem tekstury wroga"; }
 	if (!coinsound.loadFromFile("Sounds/coin.wav")) { std::cout << "Problem z zaladowaniem dzwieku nr. 1"; }
 	if (!jumpSound1.loadFromFile("Sounds/jump1.ogg")) { std::cout << "Problem z zaladowaniem dzwieku nr. 2"; }
@@ -92,6 +85,10 @@ void Gra::loadTextures()
 	wall->loadFromFile("Textures/3.png");
 	GroundTextures['X'] = wall;
 
+	e_wall = new sf::Texture;
+	wall->loadFromFile("Textures/3.png");
+	GroundTexturesE['F'] = e_wall;
+
 	box = new sf::Texture;
 	box->loadFromFile("Textures/box.png");
 	GroundTextures['B'] = box;
@@ -99,7 +96,6 @@ void Gra::loadTextures()
 	coinT = new sf::Texture;
 	coinT->loadFromFile("Textures/cointext.png");
 	CoinTextures['C'] = coinT;
-
 
 	Oceny.setFillColor(sf::Color::Green);
 
@@ -125,7 +121,7 @@ bool Gra::Run()
 {
 	return window->isOpen();
 }
-void Gra::wygrana(float& zycie)
+void Gra::wygrana()
 {
 	sf::RenderWindow window2(sf::VideoMode(800, 400), "Wygrana");
 	sf::Texture texture3;
@@ -285,6 +281,13 @@ void Gra::wysZycie()
 		window->close();
 		przegrana();
 	}
+	if (zycie == 1.25)
+	{
+		ssOceny << " ndst ";
+		Oceny.setFillColor(sf::Color::Red);
+		window->close();
+		przegrana();
+	}
 	if (zycie == 1)
 	{
 		ssOceny << " ndst ";
@@ -348,20 +351,20 @@ void Gra::Update()
 	// old coin:  coin->Update(deltaTime);
 	// old coin:  coin1->Update(deltaTime);
 	player->Update(deltaTime);
-	wrog->Update(deltaTime);
 	for (size_t i = 0; i < przeciwnik.size(); i++)
 	{
 		przeciwnik[i]->Update(deltaTime);
 	}
 	PlayerCollision(direction, 1.0f);
-	EnemyCollision(direction, 1.0f);
+	
 	PlayerCollisionST(direction2, 1.0f);
-	EnemyCollisionST(direction2, 1.0f);
+	
 	WrogowieCollisionST(direction2, 1.0f);
 	WrogowieCollision(direction2, 1.0f);
 	CoinCollision(direction3, 1.0f);
-	CombatCollision(direction, 1.0f);
+	
 	CombatCollision2(direction, 1.0f);
+	enemyWall(direction, 1.0f);
 }
 /*void Gra::TworzCoin()
 {
@@ -370,7 +373,7 @@ void Gra::Update()
 }*/
 void Gra::Chmurki()
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		alien.emplace_back(std::make_unique<Duch>("Textures/chmurka.png"));
 		float pleaceX;
@@ -380,8 +383,8 @@ void Gra::Chmurki()
 		for (size_t i = 0; i < alien.size(); i++)
 		{
 
-			pleaceX = rand() % 2400;
-			pleaceY = rand() % 240 - 450;
+			pleaceX = rand() % 9600;
+			pleaceY = rand() % 890 - 600;
 
 			alien[i]->setPosition(pleaceX, pleaceY);
 		}
@@ -412,7 +415,6 @@ void Gra::Render()
 		przeciwnik[i]->Draw(*window);
 	}
 	player->Draw(*window);
-	wrog->Draw(*window);
 
 	for (int i = 0; i < ST_level->MatrixST.size(); i++)
 	{
@@ -462,20 +464,19 @@ void Gra::EnemiesLoad()
 			charLine.clear();
 		}
 	}
-	for (size_t x = 0; x < przeciwnik.size(); x++)
-	{
+	
 		for (int i = 0; i < EnemiesLocation.size(); i++)
 		{
 			for (int j = 0; j < EnemiesLocation[i].size(); j++)
 			{
 				if (EnemiesLocation[i][j] == 'E')
 				{
-					przeciwnik[x]->body.setPosition(float(j * 64), float(i * 64));
+					przeciwnik.emplace_back(std::make_unique<Enemies2>(&enemyTexture2, sf::Vector2u(3, 8), 0.075f, 200.0f, 320.0f, (j * 64), (i * 64)));
 				}
 			}
 
 		}
-	}
+	
 }
 /*bool Gra::isCollidingWithCoin(std::vector<Coin*>& coinVec)
 {
@@ -609,176 +610,6 @@ void Gra::PlayerCollision(sf::Vector2f& direction, float p)
 	}
 
 }
-void Gra::CombatCollision(sf::Vector2f& direction, float p)
-{
-	float deltax;
-	float deltay;
-	float intersectX;
-	float intersectY;
-
-
-	sf::Vector2f thisposition = this->wrog->GetPosition();
-	sf::Vector2f otherposition = this->player->GetPosition();
-	sf::Vector2f thishalfsize = this->wrog->body.getSize() / 2.0f;
-	sf::Vector2f otherhalfsize = this->player->body.getSize() / 2.0f;
-
-	bool t;
-
-	deltax = otherposition.x - thisposition.x;
-	deltay = otherposition.y - thisposition.y;
-
-	intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
-	intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
-
-	if (intersectX < 0.0f && intersectY < 0.0f)
-	{
-		p = std::min(std::max(p, 0.0f), 1.0f);
-
-		if (intersectX > intersectY)
-		{
-			if (deltax > 0.0f)
-			{
-				this->wrog->body.move(intersectX * (1.0f - p), 0.0f);
-				this->player->body.move(-intersectX * p, 0.0f);
-
-				player->body.setPosition(256, 1152);
-				direction.x = 1.0f;
-				direction.y = 0.0f;
-				damage.play();
-				zycie--;
-				ssOceny.str("");
-				wysZycie();
-			}
-			else
-			{
-				this->wrog->body.move(-intersectX * (1.0f - p), 0.0f);
-				this->player->body.move(intersectX * p, 0.0f);
-				player->body.setPosition(256, 1152);
-				direction.x = -1.0f;
-				direction.y = 0.0f;
-				damage.play();
-				zycie--;
-				ssOceny.str("");
-				wysZycie();
-			}
-		}
-		else
-		{
-			if (deltay > 0.0f)
-			{
-				this->wrog->body.move(0.0f, intersectY * (1.0f - p));
-				this->player->body.move(0.0f, -intersectY * p);
-				direction.x = 0.0f;
-				direction.y = 1.0f;
-			}
-			else
-			{
-				this->wrog->body.move(0.0f, -intersectY * (1.0f - p));
-				this->player->body.move(0.0f, intersectY * p);
-				wrog->body.setPosition(256, 1152);
-				direction.x = 0.0f;
-				direction.y = -1.0f;
-				damage.play();
-				zycie += 0.25;
-				ssOceny.str("");
-				wysZycie();
-			}
-		}
-
-		t = true;
-
-	}
-	else {
-		t = false;
-	}
-	if (t == true)
-	{
-		this->player->OnCollision(direction);
-		this->wrog->OnCollision(direction);
-	}
-}
-void Gra::EnemyCollision(sf::Vector2f& direction, float p)
-{
-	float deltax;
-	float deltay;
-	float intersectX;
-	float intersectY;
-
-	for (size_t i = 0; i < this->level->Matrix.size(); i++)
-	{
-		for (size_t j = 0; j < this->level->Matrix[i].size(); j++)
-		{
-			sf::Vector2f thisposition = this->level->Matrix[i][j].getPosition();
-			sf::Vector2f otherposition = this->wrog->GetPosition();
-			sf::Vector2f thishalfsize(this->level->Matrix[i][j].getGlobalBounds().width / 2.0f, (level->Matrix[i][j].getGlobalBounds().height) / 2.0f);
-			sf::Vector2f otherhalfsize = this->wrog->body.getSize() / 2.0f;
-
-			bool t;
-
-			deltax = otherposition.x - thisposition.x;
-			deltay = otherposition.y - thisposition.y;
-
-			intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
-			intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
-
-			if (intersectX < 0.0f && intersectY < 0.0f)
-			{
-				p = std::min(std::max(p, 0.0f), 1.0f);
-
-				if (intersectX > intersectY)
-				{
-					if (deltax > 0.0f)
-					{
-						this->level->Matrix[i][j].move(intersectX * (1.0f - p), 0.0f);
-						this->wrog->body.move(-intersectX * p, 0.0f);
-						wrog->odbicieP();
-						direction.x = 1.0f;
-						direction.y = 0.0f;
-					}
-					else
-					{
-						this->level->Matrix[i][j].move(-intersectX * (1.0f - p), 0.0f);
-						this->wrog->body.move(intersectX * p, 0.0f);
-						wrog->odbicieL();
-						direction.x = -1.0f;
-						direction.y = 0.0f;
-					}
-				}
-				else
-				{
-					if (deltay > 0.0f)
-					{
-						this->level->Matrix[i][j].move(0.0f, intersectY * (1.0f - p));
-						this->wrog->body.move(0.0f, -intersectY * p);
-
-						direction.x = 0.0f;
-						direction.y = 1.0f;
-					}
-					else
-					{
-						this->level->Matrix[i][j].move(0.0f, -intersectY * (1.0f - p));
-						this->wrog->body.move(0.0f, intersectY * p);
-
-						direction.x = 0.0f;
-						direction.y = -1.0f;
-					}
-				}
-
-				t = true;
-
-			}
-			else {
-				t = false;
-			}
-			if (t == true)
-			{
-				this->wrog->OnCollision(direction);
-			}
-		}
-
-	}
-
-}
 void Gra::PlayerCollisionST(sf::Vector2f& direction, float p)
 {
 
@@ -856,89 +687,6 @@ void Gra::PlayerCollisionST(sf::Vector2f& direction, float p)
 			if (t == true)
 			{
 				this->player->OnCollision(direction);
-			}
-		}
-
-	}
-
-}
-void Gra::EnemyCollisionST(sf::Vector2f& direction, float p)
-{
-
-	float deltax;
-	float deltay;
-	float intersectX;
-	float intersectY;
-
-	for (size_t i = 0; i < this->ST_level->MatrixST.size(); i++)
-	{
-		for (size_t j = 0; j < this->ST_level->MatrixST[i].size(); j++)
-		{
-			sf::Vector2f thisposition = this->ST_level->MatrixST[i][j].getPosition();
-			sf::Vector2f otherposition = this->wrog->GetPosition();
-			sf::Vector2f thishalfsize(this->ST_level->MatrixST[i][j].getGlobalBounds().width / 2.0f, (ST_level->MatrixST[i][j].getGlobalBounds().height - 11) / 2.0f);
-			sf::Vector2f otherhalfsize = this->wrog->body.getSize() / 2.0f;
-
-			bool t;
-
-			deltax = otherposition.x - thisposition.x;
-			deltay = otherposition.y - thisposition.y;
-
-			intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
-			intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
-
-			if (intersectX < 0.0f && intersectY < 0.0f)
-			{
-				p = std::min(std::max(p, 0.0f), 1.0f);
-
-				if (intersectX > intersectY)
-				{
-					if (deltax > 0.0f)
-					{
-						this->ST_level->MatrixST[i][j].move(intersectX * (1.0f - p), 0.0f);
-						this->wrog->body.move(-intersectX * p, 0.0f);
-						wrog->odbicieP();
-						direction.x = 1.0f;
-						direction.y = 0.0f;
-					}
-					else
-					{
-						this->ST_level->MatrixST[i][j].move(-intersectX * (1.0f - p), 0.0f);
-						this->wrog->body.move(intersectX * p, 0.0f);
-						wrog->odbicieL();
-						direction.x = -1.0f;
-						direction.y = 0.0f;
-					}
-				}
-				else
-				{
-					if (deltay > 0.0f)
-					{
-						this->ST_level->MatrixST[i][j].move(0.0f, intersectY * (1.0f - p));
-						this->wrog->body.move(0.0f, -intersectY * p);
-
-						direction.x = 0.0f;
-						direction.y = 1.0f;
-					}
-					else
-					{
-						this->ST_level->MatrixST[i][j].move(0.0f, -intersectY * (1.0f - p));
-						this->wrog->body.move(0.0f, intersectY * p);
-
-						direction.x = 0.0f;
-						direction.y = -1.0f;
-					}
-				}
-
-				t = true;
-
-			}
-			else {
-				t = false;
-			}
-			if (t == true)
-			{
-				this->wrog->OnCollision(direction);
 			}
 		}
 
@@ -1097,7 +845,7 @@ void Gra::CombatCollision2(sf::Vector2f& direction, float p)
 			{
 				this->przeciwnik[x]->body.move(0.0f, -intersectY * (1.0f - p));
 				this->player->body.move(0.0f, intersectY * p);
-				przeciwnik[x]->body.setPosition(256, 1152);
+				przeciwnik.erase(przeciwnik.begin() + x);
 				direction.x = 0.0f;
 				direction.y = -1.0f;
 				damage.play();
@@ -1116,7 +864,6 @@ void Gra::CombatCollision2(sf::Vector2f& direction, float p)
 	if (t == true)
 	{
 		this->player->OnCollision(direction);
-		this->przeciwnik[x]->OnCollision(direction);
 	}
 }
 }
@@ -1184,6 +931,93 @@ void Gra::WrogowieCollision(sf::Vector2f& direction, float p)
 						else
 						{
 							this->level->Matrix[i][j].move(0.0f, -intersectY * (1.0f - p));
+							this->przeciwnik[x]->body.move(0.0f, intersectY * p);
+
+							direction.x = 0.0f;
+							direction.y = -1.0f;
+						}
+					}
+
+					t = true;
+
+				}
+				else {
+					t = false;
+				}
+				if (t == true)
+				{
+					this->przeciwnik[x]->OnCollision(direction);
+				}
+			}
+
+		}
+	}
+
+}
+void Gra::enemyWall(sf::Vector2f& direction, float p)
+{
+
+	float deltax;
+	float deltay;
+	float intersectX;
+	float intersectY;
+
+	for (size_t x = 0; x < przeciwnik.size(); x++)
+	{
+
+		for (size_t i = 0; i < this->levelE->MatrixE.size(); i++)
+		{
+			for (size_t j = 0; j < this->levelE->MatrixE[i].size(); j++)
+			{
+				sf::Vector2f thisposition = this->levelE->MatrixE[i][j].getPosition();
+				sf::Vector2f otherposition = this->przeciwnik[x]->GetPosition();
+				sf::Vector2f thishalfsize(this->levelE->MatrixE[i][j].getGlobalBounds().width / 2.0f, (level->Matrix[i][j].getGlobalBounds().height) / 2.0f);
+				sf::Vector2f otherhalfsize = this->przeciwnik[x]->body.getSize() / 2.0f;
+
+				bool t;
+
+				deltax = otherposition.x - thisposition.x;
+				deltay = otherposition.y - thisposition.y;
+
+				intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
+				intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
+
+				if (intersectX < 0.0f && intersectY < 0.0f)
+				{
+					p = std::min(std::max(p, 0.0f), 1.0f);
+
+					if (intersectX > intersectY)
+					{
+						if (deltax > 0.0f)
+						{
+							this->levelE->MatrixE[i][j].move(intersectX * (1.0f - p), 0.0f);
+							this->przeciwnik[x]->body.move(-intersectX * p, 0.0f);
+							przeciwnik[x]->odbicieP();
+							direction.x = 1.0f;
+							direction.y = 0.0f;
+						}
+						else
+						{
+							this->levelE->MatrixE[i][j].move(-intersectX * (1.0f - p), 0.0f);
+							this->przeciwnik[x]->body.move(intersectX * p, 0.0f);
+							przeciwnik[x]->odbicieL();
+							direction.x = -1.0f;
+							direction.y = 0.0f;
+						}
+					}
+					else
+					{
+						if (deltay > 0.0f)
+						{
+							this->levelE->MatrixE[i][j].move(0.0f, intersectY * (1.0f - p));
+							this->przeciwnik[x]->body.move(0.0f, -intersectY * p);
+
+							direction.x = 0.0f;
+							direction.y = 1.0f;
+						}
+						else
+						{
+							this->levelE->MatrixE[i][j].move(0.0f, -intersectY * (1.0f - p));
 							this->przeciwnik[x]->body.move(0.0f, intersectY * p);
 
 							direction.x = 0.0f;
@@ -1278,11 +1112,10 @@ void Gra::CoinCollision(sf::Vector2f& direction, float p)
 				Score.setString(ssScore.str());
 				coin->MatrixCoin[i].erase(coin->MatrixCoin[i].begin() + j, coin->MatrixCoin[i].begin() + j + 1);
 				sound1.play();
-				if (score == 3)
+				if (score == 14)
 				{
 					window->close();
-					wygrana(zycie);
-
+					wygrana();
 				}
 
 			}

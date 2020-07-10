@@ -47,9 +47,10 @@ public:
         
         if (this->getGlobalBounds().left <= 0)
         {
-            this->setPosition(3800.0f, this->getPosition().y);
+            this->setPosition(11000.0f, this->getPosition().y);
+            vx = -50.0f;
         }
-        if (this->getGlobalBounds().left + this->getGlobalBounds().width >= 3800)
+        if (this->getGlobalBounds().left + this->getGlobalBounds().width >= 11000.0f)
         {
             this->setPosition(70.0f, this->getPosition().y);
             vx = 50.0f;

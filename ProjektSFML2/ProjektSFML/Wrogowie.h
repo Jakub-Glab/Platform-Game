@@ -8,7 +8,7 @@
 class Enemies2 
 {
 public:
-	Enemies2(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight);
+	Enemies2(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight, float posX, float posY);
 	~Enemies2();
 	void Update(float deltaTime);
 	void Draw(sf::RenderWindow& window);
