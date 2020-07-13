@@ -2,18 +2,21 @@
 
 
 
-Enemies2::Enemies2(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight, float posX, float posY) :
-	animation(texture, imageCount, switchTime)
+Enemies2::Enemies2(sf::Texture* texture1, sf::Vector2u imagecount, float posX, float posY):
+	animation(texture1, imagecount)
 {
+	
 	this->speed = speed;
 	this->jumpHeight = jumpHeight;
+	animation.switchTime = switchTime;
 	row = 0;
 	faceRight = true;
 	upkey = false;
-
 	body.setSize(sf::Vector2f(64.0f, 64.0f));
 	body.setPosition(posX, posY);
-	body.setTexture(texture);
+	body.setTexture(texture1);
+	
+	
 }
 
 Enemies2::~Enemies2()
@@ -23,28 +26,17 @@ Enemies2::~Enemies2()
 void Enemies2::Update(float deltaTime)
 {
 
-	velocity.y += 981.0f * deltaTime;
+	//velocity.y += 981.0f * deltaTime;
+	velocity.y = 0;
 	velocity.x = speed;
 	if (velocity.x == 0.0f)
 	{
 		row = 0;
 	}
 
-	else if (canJump == true)
-	{
-		row = 2;
-		if (velocity.x > 0.0f)
-		{
-			faceRight = true;
-		}
-		else
-		{
-			faceRight = false;
-		}
-	}
 	else
 	{
-		row = 1;
+		row = 2;
 
 		if (velocity.x > 0.0f)
 			faceRight = true;
@@ -79,7 +71,6 @@ void Enemies2::OnCollision(sf::Vector2f direction)
 	{
 		//Kolizja od do³u
 		velocity.y = 0.0f;
-		canJump = true;
 	}
 	else if (direction.y > 0.0f)
 	{

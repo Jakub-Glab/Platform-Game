@@ -33,7 +33,6 @@ void Level::loadMap()
 		}
 	}
 }
-
 void Level::createMap(std::map<char, sf::Texture*> groundTextures)
 {
 	std::vector<sf::Sprite> spritesLine;

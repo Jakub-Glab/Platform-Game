@@ -6,17 +6,19 @@
 #include <map>
 #include <sstream>
 #include "Player.h"
-#include "Kolizje.h"
 //#include "ECTS.h"
 #include "Mapa.h"
 #include "Chmurki.h"
-#include "CoinMap.h"
 #include "STBlock.h"
 #include <conio.h>
 #include <Windows.h>
 #include "Wrogowie.h"
 #include <fstream>
+#include <cstdio>
+#include <ctime>
+#include "Animacje2.h"
 #include "Enemy_wall.h"
+#include "Coiny.h"
 
 
 class Gra
@@ -25,7 +27,7 @@ public:
 	//Gracz:
 	Player* player;
 	//Coiny:
-	Coin* coin;
+	//Coin* coin;
 	sf::RenderWindow* window;
 	sf::Image icon;
 	sf::View* view;
@@ -36,7 +38,7 @@ public:
 	sf::Clock clock;
 	sf::Clock clock2;
 	std::map<char, sf::Texture*> GroundTextures;
-	std::map<char, sf::Texture*> CoinTextures;
+	//std::map<char, sf::Texture*> CoinTextures;
 	std::map<char, sf::Texture*> ST_textures;
 	std::map<char, sf::Texture*> GroundTexturesE;
 	float VIEW_HEIGHT = 640.0f;
@@ -47,8 +49,8 @@ public:
 	//Tekstury:
 	sf::Texture playerTexture;
 	sf::Texture enemyTexture2;
+	sf::Texture coinTexture;
 	// old coin:  sf::Texture coinTexture;
-	Collider col = player->GetCollider();
 	sf::Texture tlo;
 	sf::Sprite Tlo;
 	//Bloki:
@@ -57,13 +59,12 @@ public:
 	sf::Texture* wall = new sf::Texture;
 	sf::Texture* box = new sf::Texture;
 	sf::Texture* stone = new sf::Texture;
-	sf::Texture* coinT = new sf::Texture;
 	sf::Texture* e_wall = new sf::Texture;
 	//Wektor coinów:
-	std::vector<Coin*> coinVec;
 	//Rzeczy do licznika punktów:
 	std::ostringstream ssScore;
 	std::ostringstream ssOceny;
+	
 	
 	sf::Text Score;
 	sf::Font font;
@@ -83,22 +84,31 @@ public:
 	sf::Sound jump_sound2;
 	std::vector<std::unique_ptr<RuchomySprite>> alien;
 	std::vector<std::unique_ptr<Enemies2>> przeciwnik;
+	std::vector<std::unique_ptr<Coiny>> coin;
 	sf::Clock clock3;
 	sf::Time elapsed3;
 	sf::Text Oceny;
 	std::vector<std::vector<char>> EnemiesLocation;
+	std::vector<std::vector<char>> CoinLocation;
 	sf::Color orange;
-
+	std::clock_t start;
+	double duration;
 	float zycie = 4;
+	int wygryw;
 
-	Gra();
+
+
+	
+
+	Gra(int win);
 	~Gra();
+	
 	void wysPunkty();
 	void wysZycie();
 	void loadTextures();
 	void loadData();
 	void Chmurki();
-	//void TworzCoin();
+	void TworzCoin();
 	void wygrana();
 	void przegrana();
 	void Czas();
@@ -107,17 +117,16 @@ public:
 	void Render();
 	void Licznik();
 	void EnemiesLoad();
-	void PlayerCollision(sf::Vector2f& direction, float p);
+	void PlayerCollision(sf::Vector2f& direction);
 	
-	void PlayerCollisionST(sf::Vector2f& direction, float p);
+	void PlayerCollisionST(sf::Vector2f& direction);
 	
-	void CombatCollision2(sf::Vector2f& direction, float p);
+	void CombatCollision2(sf::Vector2f& direction);
 	
-	void CoinCollision(sf::Vector2f& direction, float p);
-	void WrogowieCollision(sf::Vector2f& direction, float p);
-	void WrogowieCollisionST(sf::Vector2f& direction, float p);
-	void enemyWall(sf::Vector2f& direction, float p);
-	//bool isCollidingWithCoin(std::vector<Coin*> &coinVec);
+	void CoinCollision(sf::Vector2f& direction);
+	void WrogowieCollision(sf::Vector2f& direction);
+	void WrogowieCollisionST(sf::Vector2f& direction);
+	void enemyWall(sf::Vector2f& direction);
 
 
 };

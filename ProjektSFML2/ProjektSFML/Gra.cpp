@@ -1,17 +1,19 @@
 #include "Gra.h"
 
 
-Gra::Gra()
+Gra::Gra(int win)
 {
 	window = new sf::RenderWindow(sf::VideoMode(1024, 640), "Gra SFML", sf::Style::Close | sf::Style::Resize);
 	loadData();
 	view = new sf::View(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(1024, 640));
 	level = new Level(GroundTextures);
 	levelE = new LevelE(GroundTexturesE);
-	player = new Player(&playerTexture, sf::Vector2u(3, 8), 0.1f, 200.0f, 320.0f);
-	coin = new Coin(CoinTextures);
+	player = new Player(&playerTexture, sf::Vector2u(3, 8));
 	ST_level = new STLevel(ST_textures);
 	EnemiesLoad();
+	TworzCoin();
+	start = std::clock();
+	wygryw = win;
 }
 Gra::~Gra()
 {
@@ -19,10 +21,8 @@ Gra::~Gra()
 	delete grass;
 	delete stone;
 	delete box;
-	delete coin;
 	delete player;
 	delete view;
-	delete coinT;
 }
 void Gra::loadTextures()
 {
@@ -35,10 +35,7 @@ void Gra::loadTextures()
 	if (!tlo.loadFromFile("Textures/tlo4.jpg")); {std::cout << "Problem z zaladowaniem grafiki tla"; }
 	if (!font.loadFromFile("Fonts/font.ttf")) { std::cout << "Blad z zaladowaniem czcionki!!"; }
 	if (!icon.loadFromFile("Textures/ikona_gra.png")) { std::cout << "Blad z zaladowaniem ikony!!"; }
-	/*if (!coinTexture.loadFromFile("CoinSheet.png"))
-	{
-		std::cout << "Problem z zaladowaniem tekstury coin";
-	}*/
+	if (!coinTexture.loadFromFile("Textures/CoinSheet.png")) { std::cout << "Problem z zaladowaniem tekstury coina"; }
 	sound1.setBuffer(coinsound);
 	jump_sound1.setBuffer(jumpSound1);
 	jump_sound2.setBuffer(jumpSound2);
@@ -93,9 +90,6 @@ void Gra::loadTextures()
 	box->loadFromFile("Textures/box.png");
 	GroundTextures['B'] = box;
 
-	coinT = new sf::Texture;
-	coinT->loadFromFile("Textures/cointext.png");
-	CoinTextures['C'] = coinT;
 
 	Oceny.setFillColor(sf::Color::Green);
 
@@ -135,7 +129,24 @@ void Gra::wygrana()
 	sf::Event evnt;
 	sf::Font font2;
 	if (!font2.loadFromFile("Fonts/font.ttf")) { std::cout << "Blad z zaladowaniem czcionki!!"; }
-
+	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	sf::Text Czas_t;
+	sf::Text Wynik_t;
+	std::ostringstream Czas;
+	std::ostringstream Wynik;
+	Czas << duration << " sekund";
+	Czas_t.setCharacterSize(35);
+	Czas_t.setFillColor(sf::Color::Red);
+	Czas_t.setFont(font);
+	Czas_t.setString(Czas.str());
+	Czas_t.setPosition(400, 185);
+	float final_score = (zycie * (duration))*100;
+	Wynik << final_score;
+	Wynik_t.setCharacterSize(35);
+	Wynik_t.setFillColor(sf::Color::Blue);
+	Wynik_t.setFont(font);
+	Wynik_t.setString(Wynik.str());
+	Wynik_t.setPosition(400, 236);
 	while (window2.isOpen())
 	{
 		while (window2.pollEvent(evnt)) {
@@ -226,6 +237,8 @@ void Gra::wygrana()
 			Koniec.setPosition(400, 135);
 			window2.draw(Koniec);
 		}
+		window2.draw(Czas_t);
+		window2.draw(Wynik_t);
 		window2.display();
 	}
 }
@@ -241,6 +254,7 @@ void Gra::przegrana()
 	icon.loadFromFile("Textures/ikona_gra.png");
 	window2.setIcon(64, 64, icon.getPixelsPtr());
 	sf::Event evnt;
+	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 	while (window2.isOpen())
 	{
 		while (window2.pollEvent(evnt)) {
@@ -274,35 +288,13 @@ void Gra::wysZycie()
 	if (zycie == 2.25) { ssOceny << " Dst "; Oceny.setFillColor(sf::Color::Yellow); }
 	if (zycie == 2) { ssOceny << " Dst "; Oceny.setFillColor(sf::Color::Yellow); }
 	if (zycie == 1.75) { ssOceny << " Dst - "; Oceny.setFillColor(sf::Color::Yellow); }
-	if (zycie == 1.5)
+	if (zycie <= 1.5)
 	{
 		ssOceny << " ndst ";
 		Oceny.setFillColor(sf::Color::Red);
 		window->close();
 		przegrana();
 	}
-	if (zycie == 1.25)
-	{
-		ssOceny << " ndst ";
-		Oceny.setFillColor(sf::Color::Red);
-		window->close();
-		przegrana();
-	}
-	if (zycie == 1)
-	{
-		ssOceny << " ndst ";
-		Oceny.setFillColor(sf::Color::Red);
-		window->close();
-		przegrana();
-	}
-	if (zycie == 0.75)
-	{
-		ssOceny << " ndst ";
-		Oceny.setFillColor(sf::Color::Red);
-		window->close();
-		przegrana();
-	}
-
 }
 void Gra::wysPunkty()
 {
@@ -314,12 +306,8 @@ void Gra::Update()
 
 	elapsed3 = clock3.restart();
 
-
-
-	window->setFramerateLimit(30);
+	window->setFramerateLimit(60);
 	deltaTime = clock.restart().asSeconds();
-	if (deltaTime > 1.0f / 20.0f)
-		deltaTime = 1.0f / 20.0f;
 	while (window->pollEvent(evnt)) {
 
 		switch (evnt.type) {
@@ -355,22 +343,50 @@ void Gra::Update()
 	{
 		przeciwnik[i]->Update(deltaTime);
 	}
-	PlayerCollision(direction, 1.0f);
-	
-	PlayerCollisionST(direction2, 1.0f);
-	
-	WrogowieCollisionST(direction2, 1.0f);
-	WrogowieCollision(direction2, 1.0f);
-	CoinCollision(direction3, 1.0f);
-	
-	CombatCollision2(direction, 1.0f);
-	enemyWall(direction, 1.0f);
+	for (size_t i = 0; i < coin.size(); i++)
+	{
+		coin[i]->Update(deltaTime);
+	}
+	PlayerCollision(direction);
+	PlayerCollisionST(direction2);
+	WrogowieCollisionST(direction2);
+	WrogowieCollision(direction2);
+	CoinCollision(direction3);
+	CombatCollision2(direction);
+	enemyWall(direction);
 }
-/*void Gra::TworzCoin()
+void Gra::TworzCoin()
 {
-	// old coin:  coinVec.push_back(coin);
-	// old coin:  coinVec.push_back(coin1);
-}*/
+	std::ifstream file("Maps/coinMap.txt");
+	std::string charLine;
+	std::vector<char> mapLine;
+	if (file.is_open())
+	{
+		while (file.good())
+		{
+			getline(file, charLine);
+			for (int i = 0; i < charLine.length(); i++)
+			{
+				mapLine.push_back(charLine[i]);
+			}
+			CoinLocation.push_back(mapLine);
+			mapLine.clear();
+			charLine.clear();
+		}
+	}
+
+	for (int i = 0; i < CoinLocation.size(); i++)
+	{
+		for (int j = 0; j < EnemiesLocation[i].size(); j++)
+		{
+			if (EnemiesLocation[i][j] == 'C')
+			{
+				coin.emplace_back(std::make_unique<Coiny>(&coinTexture, sf::Vector2u(1, 7), (j * 64), (i * 64)));
+			}
+		}
+
+	}
+}
 void Gra::Chmurki()
 {
 	for (int i = 0; i < 10; i++)
@@ -414,6 +430,10 @@ void Gra::Render()
 	{
 		przeciwnik[i]->Draw(*window);
 	}
+	for (size_t i = 0; i < coin.size(); i++)
+	{
+		coin[i]->Draw(*window);
+	}
 	player->Draw(*window);
 
 	for (int i = 0; i < ST_level->MatrixST.size(); i++)
@@ -430,17 +450,7 @@ void Gra::Render()
 			window->draw(level->Matrix[i][j]);
 		}
 	}
-	for (int i = 0; i < coin->MatrixCoin.size(); i++)
-	{
-		for (int j = 0; j < coin->MatrixCoin[i].size(); j++)
-		{
-			window->draw(coin->MatrixCoin[i][j]);
-		}
-	}
-
-
-	// old coin:  coin->Draw(*window);
-	// old coin:  coin1->Draw(*window);
+	;
 	Licznik();
 
 	window->display();
@@ -471,23 +481,13 @@ void Gra::EnemiesLoad()
 			{
 				if (EnemiesLocation[i][j] == 'E')
 				{
-					przeciwnik.emplace_back(std::make_unique<Enemies2>(&enemyTexture2, sf::Vector2u(3, 8), 0.075f, 200.0f, 320.0f, (j * 64), (i * 64)));
+					przeciwnik.emplace_back(std::make_unique<Enemies2>(&enemyTexture2, sf::Vector2u(3, 8), (j * 64), (i * 64)));
 				}
 			}
 
 		}
 	
 }
-/*bool Gra::isCollidingWithCoin(std::vector<Coin*>& coinVec)
-{
-
-	if (this->player->body.getGlobalBounds().intersects(this->coin->ects.getGlobalBounds())) {
-		sound1.play();
-		return true;
-	}
-	return false;
-
-}*/
 void Gra::Licznik()
 {
 
@@ -528,8 +528,9 @@ void Gra::Licznik()
 
 
 }
-void Gra::PlayerCollision(sf::Vector2f& direction, float p)
+void Gra::PlayerCollision(sf::Vector2f& direction)
 {
+
 	float deltax;
 	float deltay;
 	float intersectX;
@@ -554,22 +555,22 @@ void Gra::PlayerCollision(sf::Vector2f& direction, float p)
 
 			if (intersectX < 0.0f && intersectY < 0.0f)
 			{
-				p = std::min(std::max(p, 0.0f), 1.0f);
+
 
 				if (intersectX > intersectY)
 				{
 					if (deltax > 0.0f)
 					{
-						this->level->Matrix[i][j].move(intersectX * (1.0f - p), 0.0f);
-						this->player->body.move(-intersectX * p, 0.0f);
+						
+						this->player->body.move(-intersectX * 1.0f, 0.0f);
 
 						direction.x = 1.0f;
 						direction.y = 0.0f;
 					}
 					else
 					{
-						this->level->Matrix[i][j].move(-intersectX * (1.0f - p), 0.0f);
-						this->player->body.move(intersectX * p, 0.0f);
+						
+						this->player->body.move(intersectX * 1.0f, 0.0f);
 
 						direction.x = -1.0f;
 						direction.y = 0.0f;
@@ -579,16 +580,16 @@ void Gra::PlayerCollision(sf::Vector2f& direction, float p)
 				{
 					if (deltay > 0.0f)
 					{
-						this->level->Matrix[i][j].move(0.0f, intersectY * (1.0f - p));
-						this->player->body.move(0.0f, -intersectY * p);
+						
+						this->player->body.move(0.0f, -intersectY * 1.0f);
 
 						direction.x = 0.0f;
 						direction.y = 1.0f;
 					}
 					else
 					{
-						this->level->Matrix[i][j].move(0.0f, -intersectY * (1.0f - p));
-						this->player->body.move(0.0f, intersectY * p);
+						
+						this->player->body.move(0.0f, intersectY * 1.0f);
 
 						direction.x = 0.0f;
 						direction.y = -1.0f;
@@ -608,9 +609,8 @@ void Gra::PlayerCollision(sf::Vector2f& direction, float p)
 		}
 
 	}
-
 }
-void Gra::PlayerCollisionST(sf::Vector2f& direction, float p)
+void Gra::PlayerCollisionST(sf::Vector2f& direction)
 {
 
 	float deltax;
@@ -637,22 +637,22 @@ void Gra::PlayerCollisionST(sf::Vector2f& direction, float p)
 
 			if (intersectX < 0.0f && intersectY < 0.0f)
 			{
-				p = std::min(std::max(p, 0.0f), 1.0f);
+				
 
 				if (intersectX > intersectY)
 				{
 					if (deltax > 0.0f)
 					{
-						this->ST_level->MatrixST[i][j].move(intersectX * (1.0f - p), 0.0f);
-						this->player->body.move(-intersectX * p, 0.0f);
+						this->ST_level->MatrixST[i][j].move(0.0f, 0.0f);
+						this->player->body.move(-intersectX * 1.0f, 0.0f);
 
 						direction.x = 1.0f;
 						direction.y = 0.0f;
 					}
 					else
 					{
-						this->ST_level->MatrixST[i][j].move(-intersectX * (1.0f - p), 0.0f);
-						this->player->body.move(intersectX * p, 0.0f);
+						this->ST_level->MatrixST[i][j].move(0.0f, 0.0f);
+						this->player->body.move(intersectX * 1.0f, 0.0f);
 
 						direction.x = -1.0f;
 						direction.y = 0.0f;
@@ -662,16 +662,16 @@ void Gra::PlayerCollisionST(sf::Vector2f& direction, float p)
 				{
 					if (deltay > 0.0f)
 					{
-						this->ST_level->MatrixST[i][j].move(0.0f, intersectY * (1.0f - p));
-						this->player->body.move(0.0f, -intersectY * p);
+						this->ST_level->MatrixST[i][j].move(0.0f, 0.0f);
+						this->player->body.move(0.0f, -intersectY * 1.0f);
 
 						direction.x = 0.0f;
 						direction.y = 1.0f;
 					}
 					else
 					{
-						this->ST_level->MatrixST[i][j].move(0.0f, -intersectY * (1.0f - p));
-						this->player->body.move(0.0f, intersectY * p);
+						this->ST_level->MatrixST[i][j].move(0.0f, 0.0f);
+						this->player->body.move(0.0f, intersectY * 1.0f);
 
 						direction.x = 0.0f;
 						direction.y = -1.0f;
@@ -693,7 +693,7 @@ void Gra::PlayerCollisionST(sf::Vector2f& direction, float p)
 	}
 
 }
-void Gra::WrogowieCollisionST(sf::Vector2f& direction, float p)
+void Gra::WrogowieCollisionST(sf::Vector2f& direction)
 {
 
 	float deltax;
@@ -722,22 +722,22 @@ void Gra::WrogowieCollisionST(sf::Vector2f& direction, float p)
 
 				if (intersectX < 0.0f && intersectY < 0.0f)
 				{
-					p = std::min(std::max(p, 0.0f), 1.0f);
+					
 
 					if (intersectX > intersectY)
 					{
 						if (deltax > 0.0f)
 						{
-							this->ST_level->MatrixST[i][j].move(intersectX * (1.0f - p), 0.0f);
-							this->przeciwnik[x]->body.move(-intersectX * p, 0.0f);
+							
+							this->przeciwnik[x]->body.move(-intersectX * 1.0f, 0.0f);
 							przeciwnik[x]->odbicieP();
 							direction.x = 1.0f;
 							direction.y = 0.0f;
 						}
 						else
 						{
-							this->ST_level->MatrixST[i][j].move(-intersectX * (1.0f - p), 0.0f);
-							this->przeciwnik[x]->body.move(intersectX * p, 0.0f);
+							
+							this->przeciwnik[x]->body.move(intersectX * 1.0f, 0.0f);
 							przeciwnik[x]->odbicieL();
 							direction.x = -1.0f;
 							direction.y = 0.0f;
@@ -747,16 +747,16 @@ void Gra::WrogowieCollisionST(sf::Vector2f& direction, float p)
 					{
 						if (deltay > 0.0f)
 						{
-							this->ST_level->MatrixST[i][j].move(0.0f, intersectY * (1.0f - p));
-							this->przeciwnik[x]->body.move(0.0f, -intersectY * p);
+							
+							this->przeciwnik[x]->body.move(0.0f, -intersectY * 1.0f);
 
 							direction.x = 0.0f;
 							direction.y = 1.0f;
 						}
 						else
 						{
-							this->ST_level->MatrixST[i][j].move(0.0f, -intersectY * (1.0f - p));
-							this->przeciwnik[x]->body.move(0.0f, intersectY * p);
+							
+							this->przeciwnik[x]->body.move(0.0f, intersectY * 1.0f);
 
 							direction.x = 0.0f;
 							direction.y = -1.0f;
@@ -778,7 +778,7 @@ void Gra::WrogowieCollisionST(sf::Vector2f& direction, float p)
 		}
 	}
 }
-void Gra::CombatCollision2(sf::Vector2f& direction, float p)
+void Gra::CombatCollision2(sf::Vector2f& direction)
 {
 	float deltax;
 	float deltay;
@@ -802,18 +802,13 @@ void Gra::CombatCollision2(sf::Vector2f& direction, float p)
 
 	if (intersectX < 0.0f && intersectY < 0.0f)
 	{
-		p = std::min(std::max(p, 0.0f), 1.0f);
+		
 
 		if (intersectX > intersectY)
 		{
 			if (deltax > 0.0f)
 			{
-				this->przeciwnik[x]->body.move(intersectX * (1.0f - p), 0.0f);
-				this->player->body.move(-intersectX * p, 0.0f);
-
-				player->body.setPosition(256, 1152);
-				direction.x = 1.0f;
-				direction.y = 0.0f;
+				player->body.setPosition(256, 1427);
 				damage.play();
 				zycie--;
 				ssOceny.str("");
@@ -821,11 +816,7 @@ void Gra::CombatCollision2(sf::Vector2f& direction, float p)
 			}
 			else
 			{
-				this->przeciwnik[x]->body.move(-intersectX * (1.0f - p), 0.0f);
-				this->player->body.move(intersectX * p, 0.0f);
-				player->body.setPosition(256, 1152);
-				direction.x = -1.0f;
-				direction.y = 0.0f;
+				player->body.setPosition(256, 1427);
 				damage.play();
 				zycie--;
 				ssOceny.str("");
@@ -834,20 +825,9 @@ void Gra::CombatCollision2(sf::Vector2f& direction, float p)
 		}
 		else
 		{
-			if (deltay > 0.0f)
+			if (deltay < 0.0f)
 			{
-				this->przeciwnik[x]->body.move(0.0f, intersectY * (1.0f - p));
-				this->player->body.move(0.0f, -intersectY * p);
-				direction.x = 0.0f;
-				direction.y = 1.0f;
-			}
-			else
-			{
-				this->przeciwnik[x]->body.move(0.0f, -intersectY * (1.0f - p));
-				this->player->body.move(0.0f, intersectY * p);
 				przeciwnik.erase(przeciwnik.begin() + x);
-				direction.x = 0.0f;
-				direction.y = -1.0f;
 				damage.play();
 				zycie += 0.25;
 				ssOceny.str("");
@@ -867,7 +847,7 @@ void Gra::CombatCollision2(sf::Vector2f& direction, float p)
 	}
 }
 }
-void Gra::WrogowieCollision(sf::Vector2f& direction, float p)
+void Gra::WrogowieCollision(sf::Vector2f& direction)
 {
 
 	float deltax;
@@ -897,22 +877,22 @@ void Gra::WrogowieCollision(sf::Vector2f& direction, float p)
 
 				if (intersectX < 0.0f && intersectY < 0.0f)
 				{
-					p = std::min(std::max(p, 0.0f), 1.0f);
+					
 
 					if (intersectX > intersectY)
 					{
 						if (deltax > 0.0f)
 						{
-							this->level->Matrix[i][j].move(intersectX * (1.0f - p), 0.0f);
-							this->przeciwnik[x]->body.move(-intersectX * p, 0.0f);
+							
+							this->przeciwnik[x]->body.move(-intersectX * 1.0f, 0.0f);
 							przeciwnik[x]->odbicieP();
 							direction.x = 1.0f;
 							direction.y = 0.0f;
 						}
 						else
 						{
-							this->level->Matrix[i][j].move(-intersectX * (1.0f - p), 0.0f);
-							this->przeciwnik[x]->body.move(intersectX * p, 0.0f);
+							
+							this->przeciwnik[x]->body.move(intersectX * 1.0f, 0.0f);
 							przeciwnik[x]->odbicieL();
 							direction.x = -1.0f;
 							direction.y = 0.0f;
@@ -922,16 +902,16 @@ void Gra::WrogowieCollision(sf::Vector2f& direction, float p)
 					{
 						if (deltay > 0.0f)
 						{
-							this->level->Matrix[i][j].move(0.0f, intersectY * (1.0f - p));
-							this->przeciwnik[x]->body.move(0.0f, -intersectY * p);
+							
+							this->przeciwnik[x]->body.move(0.0f, -intersectY * 1.0f);
 
 							direction.x = 0.0f;
 							direction.y = 1.0f;
 						}
 						else
 						{
-							this->level->Matrix[i][j].move(0.0f, -intersectY * (1.0f - p));
-							this->przeciwnik[x]->body.move(0.0f, intersectY * p);
+							
+							this->przeciwnik[x]->body.move(0.0f, intersectY * 1.0f);
 
 							direction.x = 0.0f;
 							direction.y = -1.0f;
@@ -954,7 +934,7 @@ void Gra::WrogowieCollision(sf::Vector2f& direction, float p)
 	}
 
 }
-void Gra::enemyWall(sf::Vector2f& direction, float p)
+void Gra::enemyWall(sf::Vector2f& direction)
 {
 
 	float deltax;
@@ -984,22 +964,22 @@ void Gra::enemyWall(sf::Vector2f& direction, float p)
 
 				if (intersectX < 0.0f && intersectY < 0.0f)
 				{
-					p = std::min(std::max(p, 0.0f), 1.0f);
+					
 
 					if (intersectX > intersectY)
 					{
 						if (deltax > 0.0f)
 						{
-							this->levelE->MatrixE[i][j].move(intersectX * (1.0f - p), 0.0f);
-							this->przeciwnik[x]->body.move(-intersectX * p, 0.0f);
+							
+							this->przeciwnik[x]->body.move(-intersectX * 1.0f, 0.0f);
 							przeciwnik[x]->odbicieP();
 							direction.x = 1.0f;
 							direction.y = 0.0f;
 						}
 						else
 						{
-							this->levelE->MatrixE[i][j].move(-intersectX * (1.0f - p), 0.0f);
-							this->przeciwnik[x]->body.move(intersectX * p, 0.0f);
+							
+							this->przeciwnik[x]->body.move(intersectX * 1.0f, 0.0f);
 							przeciwnik[x]->odbicieL();
 							direction.x = -1.0f;
 							direction.y = 0.0f;
@@ -1009,16 +989,16 @@ void Gra::enemyWall(sf::Vector2f& direction, float p)
 					{
 						if (deltay > 0.0f)
 						{
-							this->levelE->MatrixE[i][j].move(0.0f, intersectY * (1.0f - p));
-							this->przeciwnik[x]->body.move(0.0f, -intersectY * p);
+							
+							this->przeciwnik[x]->body.move(0.0f, -intersectY * 1.0f);
 
 							direction.x = 0.0f;
 							direction.y = 1.0f;
 						}
 						else
 						{
-							this->levelE->MatrixE[i][j].move(0.0f, -intersectY * (1.0f - p));
-							this->przeciwnik[x]->body.move(0.0f, intersectY * p);
+							
+							this->przeciwnik[x]->body.move(0.0f, intersectY * 1.0f);
 
 							direction.x = 0.0f;
 							direction.y = -1.0f;
@@ -1041,85 +1021,29 @@ void Gra::enemyWall(sf::Vector2f& direction, float p)
 	}
 
 }
-void Gra::CoinCollision(sf::Vector2f& direction, float p)
+void Gra::CoinCollision(sf::Vector2f& direction)
 {
 
-	float deltax;
-	float deltay;
-	float intersectX;
-	float intersectY;
-
-	for (size_t i = 0; i < this->coin->MatrixCoin.size(); i++)
+	for (size_t x = 0; x < coin.size(); x++)
 	{
-		for (size_t j = 0; j < this->coin->MatrixCoin[i].size(); j++)
+
+		if (player->body.getGlobalBounds().intersects(coin[x]->ects.getGlobalBounds()))
 		{
+			coin.erase(coin.begin() + x);
+			score++;
+			ssScore.str("");
+			ssScore << "Punkty ECTS: " << score;
+			Score.setString(ssScore.str());
 
-
-			sf::Vector2f thisposition = this->coin->MatrixCoin[i][j].getPosition();
-			sf::Vector2f otherposition = this->player->GetPosition();
-			sf::Vector2f thishalfsize(this->coin->MatrixCoin[i][j].getGlobalBounds().width / 2.0f, coin->MatrixCoin[i][j].getGlobalBounds().height / 2.0f);
-			sf::Vector2f otherhalfsize = this->player->body.getSize() / 2.0f;
-			bool t;
-
-			deltax = otherposition.x - thisposition.x;
-			deltay = otherposition.y - thisposition.y;
-
-			intersectX = std::abs(deltax) - (otherhalfsize.x + thishalfsize.x);
-			intersectY = std::abs(deltay) - (otherhalfsize.y + thishalfsize.y);
-
-			if (intersectX < 0.0f && intersectY < 0.0f)
+			sound1.play();
+			if (score == wygryw)
 			{
-				p = std::min(std::max(p, 0.0f), 1.0f);
-
-				if (intersectX > intersectY)
-				{
-					if (deltax > 0.0f)
-					{
-						this->coin->MatrixCoin[i][j].move(intersectX * (1.0f - p), 0.0f);
-						this->player->body.move(-intersectX * p, 0.0f);
-					}
-					else
-					{
-						this->coin->MatrixCoin[i][j].move(-intersectX * (1.0f - p), 0.0f);
-						this->player->body.move(intersectX * p, 0.0f);
-					}
-				}
-				else
-				{
-					if (deltay > 0.0f)
-					{
-						this->coin->MatrixCoin[i][j].move(0.0f, intersectY * (1.0f - p));
-						this->player->body.move(0.0f, -intersectY * p);
-					}
-					else
-					{
-						this->coin->MatrixCoin[i][j].move(0.0f, -intersectY * (1.0f - p));
-						this->player->body.move(0.0f, intersectY * p);
-					}
-				}
-
-				t = true;
-
+				window->close();
+				wygrana();
 			}
-			else {
-				t = false;
-			}
-			if (t == true)
-			{
-				score++;
-				ssScore.str("");
-				ssScore << "Punkty ECTS: " << score;
-				Score.setString(ssScore.str());
-				coin->MatrixCoin[i].erase(coin->MatrixCoin[i].begin() + j, coin->MatrixCoin[i].begin() + j + 1);
-				sound1.play();
-				if (score == 14)
-				{
-					window->close();
-					wygrana();
-				}
 
-			}
+
 		}
-
 	}
+	
 }

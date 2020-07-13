@@ -2,6 +2,8 @@
 #include "Gra.h"
 #include "Chmurki.h"
 #include "Menu.h"
+
+
 void sterowanie()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 800), "Sterowanie");
@@ -47,8 +49,14 @@ void sterowanie()
 		window.display();
 	}
 }
+	
 int main()
 {
+	int win;
+	std::cout << "Zeby nie musial Pan przechodzic calej gry zeby zobaczyc ekran wygranej, prosze wpisac liczbe (maks 14) punktow po ktorej zdobyciu ma nastapic wygrana:  "<<std::endl;
+	cin >> win;
+
+
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Gra MENU");
 	sf::Clock clock;
 	sf::Time elapsed;
@@ -144,7 +152,7 @@ int main()
 					case 0:
 					{
 						
-						Gra* gra = new Gra;
+						Gra* gra = new Gra(win);
 						while (gra->Run())
 						{
 							gra->Update();

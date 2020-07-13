@@ -1,8 +1,8 @@
 #include "Player.h"
 
 
-Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight) : 
-	animation(texture, imageCount, switchTime)
+Player::Player(sf::Texture* texture, sf::Vector2u imageCount) : 
+	animation(texture, imageCount)
 {
 	this->speed = speed;
 	this->jumpHeight = jumpHeight;
@@ -12,8 +12,9 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, 
 	
 
 	body.setSize(sf::Vector2f(64.0f, 64.0f));
-	body.setPosition(256.0f, 1152.0f);
+	body.setPosition(256.0f, 1427.0f);
 	body.setTexture(texture);
+	animation.switchTime = switchTime;
 }
 
 Player::~Player()
@@ -91,7 +92,7 @@ void Player::OnCollision(sf::Vector2f direction)
 	}
 	if (direction.y < 0.0f)
 	{
-		//Kolizja od do³u
+		//Kolizja od do³u		
 		velocity.y = 0.0f;
 		canJump = true;
 	}
