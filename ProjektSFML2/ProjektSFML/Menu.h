@@ -17,7 +17,7 @@ public:
 
 private:
 	int selectedItemIndex;
-	sf::Font font;
+	sf::Font font1;
 	sf::Text menu[LICZBA_OPCJI];
 
 };

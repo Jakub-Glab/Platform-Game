@@ -6,7 +6,6 @@
 #include <map>
 #include <sstream>
 #include "Player.h"
-//#include "ECTS.h"
 #include "Mapa.h"
 #include "Chmurki.h"
 #include "STBlock.h"
@@ -38,7 +37,6 @@ public:
 	sf::Clock clock;
 	sf::Clock clock2;
 	std::map<char, sf::Texture*> GroundTextures;
-	//std::map<char, sf::Texture*> CoinTextures;
 	std::map<char, sf::Texture*> ST_textures;
 	std::map<char, sf::Texture*> GroundTexturesE;
 	float VIEW_HEIGHT = 640.0f;
@@ -50,7 +48,6 @@ public:
 	sf::Texture playerTexture;
 	sf::Texture enemyTexture2;
 	sf::Texture coinTexture;
-	// old coin:  sf::Texture coinTexture;
 	sf::Texture tlo;
 	sf::Sprite Tlo;
 	//Bloki:
@@ -60,11 +57,9 @@ public:
 	sf::Texture* box = new sf::Texture;
 	sf::Texture* stone = new sf::Texture;
 	sf::Texture* e_wall = new sf::Texture;
-	//Wektor coinów:
 	//Rzeczy do licznika punktów:
 	std::ostringstream ssScore;
 	std::ostringstream ssOceny;
-	
 	
 	sf::Text Score;
 	sf::Font font;

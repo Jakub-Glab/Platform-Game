@@ -55,17 +55,18 @@ int main()
 	int win;
 	std::cout << "Zeby nie musial Pan przechodzic calej gry zeby zobaczyc ekran wygranej, prosze wpisac liczbe (maks 14) punktow po ktorej zdobyciu ma nastapic wygrana:  "<<std::endl;
 	cin >> win;
-
+	std::cout << "================================================================" << std::endl;
+	std::cout << "Gra polega na przeszukiwaniu mapy w poszukiwaniu zlotych monet ('ECTS'). Podczas gry trzeba uwazac na wrogow, kontakt z nimi zabiera czesc zycia." ;
+	std::cout << "Obecny stan zycia okresla 'Ocena', jej poczatkowa wartosc to BDB.Wrogow mozna pokonac atakujac ich w stylu 'Mario', czyli skaczac na nich." ;
+	std::cout << "Gra konczy sie po zdobyciu wszystkich monet ECTS(maksymalnie 14, jednak mozna zmienic ta wartosc)";
+	std::cout << "Koncowa punktacja zalezy od czasu w jakim zdobylo sie wymagane monety, oraz poziom zycia ('Ocena') z jaka gracz ukonczyl gre. " << std::endl;
 
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Gra MENU");
 	sf::Clock clock;
 	sf::Time elapsed;
 	srand(time(NULL));
 
-	sf::Image icon;
-	icon.loadFromFile("Textures/ikona_gra.png");
-	window.setIcon(64, 64, icon.getPixelsPtr());
-
+	
 
 	Menu menu(window.getSize().x, window.getSize().y);
 	sf::Texture texture;

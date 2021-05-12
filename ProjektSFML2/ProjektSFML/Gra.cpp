@@ -10,10 +10,10 @@ Gra::Gra(int win)
 	levelE = new LevelE(GroundTexturesE);
 	player = new Player(&playerTexture, sf::Vector2u(3, 8));
 	ST_level = new STLevel(ST_textures);
-	EnemiesLoad();
-	TworzCoin();
 	start = std::clock();
 	wygryw = win;
+	EnemiesLoad();
+	TworzCoin();
 }
 Gra::~Gra()
 {
@@ -98,7 +98,6 @@ void Gra::loadData()
 {
 	Chmurki();
 	loadTextures();
-	//TworzCoin();
 	Czas();
 	wysPunkty();
 	wysZycie();
@@ -140,7 +139,7 @@ void Gra::wygrana()
 	Czas_t.setFont(font);
 	Czas_t.setString(Czas.str());
 	Czas_t.setPosition(400, 185);
-	float final_score = (zycie * (duration))*100;
+	float final_score = (zycie / duration)*1000;
 	Wynik << final_score;
 	Wynik_t.setCharacterSize(35);
 	Wynik_t.setFillColor(sf::Color::Blue);
@@ -336,8 +335,7 @@ void Gra::Update()
 		alien[i]->Animuj(elapsed3);
 	}
 
-	// old coin:  coin->Update(deltaTime);
-	// old coin:  coin1->Update(deltaTime);
+	
 	player->Update(deltaTime);
 	for (size_t i = 0; i < przeciwnik.size(); i++)
 	{
@@ -491,25 +489,6 @@ void Gra::EnemiesLoad()
 void Gra::Licznik()
 {
 
-	/*
-	licznik.setCharacterSize(35);
-	licznik.setFillColor(sf::Color::Red);
-	licznik.setFont(font);
-	licznik.setString(Zegar.str());
-	licznik.setPosition(view->getCenter().x - 512, view->getCenter().y - 180);
-	*/
-
-	/* old coin:
-	for (int i = 0; i < coinVec.size(); i++) {
-		if (isCollidingWithCoin(coinVec)) {
-			coinVec.erase(coinVec.begin() + i);
-			score++;
-			ssScore.str("");
-			ssScore << "Punkty ECTS: " << "[" << score << "]";
-			Score.setString(ssScore.str());
-		}
-	}
-	*/
 
 	Score.setCharacterSize(35);
 	Score.setFillColor(sf::Color::Red);
