@@ -1,4 +1,3 @@
-<img src="https://tokei.rs/b1/github/jakub-glab/GUI">
 # Structural and object-oriented programming
 ## Poznan University of Technology
 
